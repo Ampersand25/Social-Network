@@ -2,7 +2,7 @@ package domain;
 
 import java.util.Objects;
 
-public class User extends HasID<Long> {
+public class User extends Entity<Long> {
     private String firstName;
     private String lastName;
 

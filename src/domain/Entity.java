@@ -1,9 +1,9 @@
 package domain;
 
-public class HasID<ID> {
+public class Entity<ID> {
     private ID id;
 
-    public HasID(ID id) {
+    public Entity(ID id) {
         this.id = id;
     }
 
