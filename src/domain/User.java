@@ -6,6 +6,11 @@ public class User extends Entity<Long> {
     private String firstName;
     private String lastName;
 
+    public User(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public User(Long id, String firstName, String lastName) {
         super(id);
         this.firstName = firstName;
@@ -46,6 +51,6 @@ public class User extends Entity<Long> {
         if(!(obj instanceof User that)) {
             return false;
         }
-        return getId() == that.getId();
+        return Objects.equals(getId(), that.getId());
     }
 }

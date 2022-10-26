@@ -3,6 +3,8 @@ package domain;
 public class Entity<ID> {
     private ID id;
 
+    public Entity() {}
+
     public Entity(ID id) {
         this.id = id;
     }

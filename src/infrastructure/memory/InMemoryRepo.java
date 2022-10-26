@@ -17,10 +17,10 @@ public class InMemoryRepo<ID, E extends Entity<ID>> implements IRepository<ID, E
     @Override
     public void add(E entity) throws RepoException {
         if(entity == null) {
-            throw new IllegalArgumentException("[!]Invalid entity (entity must not be null)!");
+            throw new IllegalArgumentException("[!]Invalid entity (entity must not be null)!\n");
         }
         if(entities.get(entity.getId()) != null) {
-            throw new RepoException("[!]Entity already exists (there is an entity with the given id)!");
+            throw new RepoException("[!]Entity already exists (there is an entity with the given id)!\n");
         }
         entities.put(entity.getId(), entity);
     }
@@ -28,14 +28,14 @@ public class InMemoryRepo<ID, E extends Entity<ID>> implements IRepository<ID, E
     @Override
     public E remove(ID id) throws RepoException {
         if(id == null) {
-            throw new IllegalArgumentException("[!]Invalid id (id must not be null)!");
+            throw new IllegalArgumentException("[!]Invalid id (id must not be null)!\n");
         }
         if(entities.isEmpty()) {
-            throw new RepoException("[!]There are no entities in the repository!");
+            throw new RepoException("[!]There are no entities in the repository!\n");
         }
         E removedEntity = entities.remove(id);
         if(removedEntity == null) {
-            throw new RepoException("[!]There is no entity in the repository with the given id!");
+            throw new RepoException("[!]There is no entity in the repository with the given id!\n");
         }
         return removedEntity;
     }
@@ -43,14 +43,14 @@ public class InMemoryRepo<ID, E extends Entity<ID>> implements IRepository<ID, E
     @Override
     public E modify(E entity) throws RepoException {
         if(entity == null) {
-            throw new IllegalArgumentException("[!]Invalid entity (entity must not be null)!");
+            throw new IllegalArgumentException("[!]Invalid entity (entity must not be null)!\n");
         }
         if(entities.isEmpty()) {
-            throw new RepoException("[!]There are no entities in the repository!");
+            throw new RepoException("[!]There are no entities in the repository!\n");
         }
         E modifiedEntity = entities.get(entity.getId());
         if(modifiedEntity == null) {
-            throw new RepoException("[!]There is no entity in the repository with the given id!");
+            throw new RepoException("[!]There is no entity in the repository with the given id!\n");
         }
         entities.remove(entity.getId());
         entities.put(entity.getId(), entity);
@@ -60,14 +60,14 @@ public class InMemoryRepo<ID, E extends Entity<ID>> implements IRepository<ID, E
     @Override
     public E search(ID id) throws RepoException {
         if(id == null) {
-            throw new IllegalArgumentException("[!]Invalid id (id must not be null)!");
+            throw new IllegalArgumentException("[!]Invalid id (id must not be null)!\n");
         }
         if(entities.isEmpty()) {
-            throw new RepoException("[!]There are no entities in the repository!");
+            throw new RepoException("[!]There are no entities in the repository!\n");
         }
         E searchedEntity = entities.get(id);
         if(searchedEntity == null) {
-            throw new RepoException("[!]There is no entity in the repository with the given id!");
+            throw new RepoException("[!]There is no entity in the repository with the given id!\n");
         }
         return searchedEntity;
     }
@@ -80,7 +80,7 @@ public class InMemoryRepo<ID, E extends Entity<ID>> implements IRepository<ID, E
     @Override
     public Iterable<E> getAll() throws RepoException {
         if(entities.isEmpty()) {
-            throw new RepoException("[!]There are no entities in the repository!");
+            throw new RepoException("[!]There are no entities in the repository!\n");
         }
         return entities.values();
     }
