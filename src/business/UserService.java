@@ -16,7 +16,7 @@ public class UserService {
         if(id == null) {
             throw new ServiceException("[!]Invalid id (id must not be null)!\n");
         }
-        if(id < 0) {
+        if(id < 0L) {
             throw new ServiceException("[!]Invalid id (id must be greater or equal with 0)!\n");
         }
     }

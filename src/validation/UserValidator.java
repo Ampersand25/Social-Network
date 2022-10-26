@@ -9,7 +9,8 @@ public class UserValidator implements IValidator<User> {
             return false;
         }
         for(int index = 0; index < name.length(); ++index) {
-            if(!Character.isLetter(name.charAt(index)) && !Character.isDigit(name.charAt(index))) {
+            Character currentCharacter = name.charAt(index);
+            if(!Character.isLetter(currentCharacter) && !Character.isDigit(currentCharacter) && currentCharacter != '\'' && currentCharacter != '-') {
                 return false;
             }
         }

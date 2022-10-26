@@ -1,6 +1,8 @@
 package presentation;
 
+import business.FriendshipService;
 import business.UserService;
+import domain.Friendship;
 import domain.User;
 import exception.RepoException;
 import exception.ServiceException;
@@ -12,9 +14,11 @@ import java.util.Scanner;
 
 public class UI {
     private final UserService userService;
+    private final FriendshipService friendshipService;
 
-    public UI(UserService userService) {
+    public UI(UserService userService, FriendshipService friendshipService) {
         this.userService = userService;
+        this.friendshipService = friendshipService;
     }
 
     private void printException(String message) {
@@ -105,7 +109,7 @@ public class UI {
             System.out.println("[=]There is only one user in the social network!");
         }
         else {
-            System.out.println("[=]There are " + userService.len() + " users in the social network!");
+            System.out.println("[=]There are " + numberOfUsers + " users in the social network!");
         }
     }
 
@@ -183,6 +187,90 @@ public class UI {
         System.out.println("**type \"exit\" to exit the application");
     }
 
+    private void addFriendshipUI(@NotNull Scanner scanner) {
+        System.out.print("Introduce the id of the first friend: ");
+        Long firstFriendId = 0L;
+        try{
+            firstFriendId = Long.parseLong(scanner.nextLine());
+        } catch(NumberFormatException ex) {
+            printException("[!]Invalid id (id must be a non negative number)!\n");
+            return;
+        }
+        System.out.print("Introduce the id of the second friend: ");
+        Long secondFriendId = 0L;
+        try {
+            secondFriendId = Long.parseLong(scanner.nextLine());
+        } catch(NumberFormatException ex) {
+            printException("[!]Invalid id (id must be a non negative number)!\n");
+            return;
+        }
+        try {
+            friendshipService.add(firstFriendId, secondFriendId);
+            System.out.println("[+]Friendship added with success!");
+        } catch (ValidationException | RepoException | ServiceException ex) {
+            printException(ex.getMessage());
+        }
+    }
+
+    private void removeFriendshipUI(@NotNull Scanner scanner) {
+        System.out.print("Introduce the id of the friendship you want to remove: ");
+        String idString = scanner.nextLine();
+        try {
+            Long id = Long.parseLong(idString);
+            Friendship removedFriendship = friendshipService.remove(id);
+            System.out.println("[-]Friendship removed with success!\nRemoved friendship: " + removedFriendship);
+        } catch(ServiceException | RepoException ex) {
+            printException(ex.getMessage());
+        } catch(NumberFormatException ex) {
+            printException("[!]Invalid id (id must be a non negative number)!\n");
+        }
+    }
+
+    private void searchFriendshipUI(@NotNull Scanner scanner) {
+        System.out.print("Introduce the id of the friendship you want to search: ");
+        String idString = scanner.nextLine();
+        try {
+            Long id = Long.parseLong(idString);
+            Friendship searchedFriendship = friendshipService.search(id);
+            System.out.println("[?]The friendship with the id " + id + " is: " + searchedFriendship);
+        } catch(ServiceException | RepoException ex) {
+            printException(ex.getMessage());
+        } catch(NumberFormatException ex) {
+            printException("[!]Invalid id (id must be a non negative number)!\n");
+        }
+    }
+
+    private void numberOfFriendshipsUI(Scanner scanner) {
+        int numberOfFriendships = friendshipService.len();
+        if(numberOfFriendships == 0) {
+            System.out.println("[=]There are no friendships in the social network!");
+        }
+        else if(numberOfFriendships == 1) {
+            System.out.println("[=]There is only one friendship in the social network!");
+        }
+        else {
+            System.out.println("[=]There are " + numberOfFriendships + " friendships in the social network!");
+        }
+    }
+
+    private void getAllFriendshipsUI(Scanner scanner) {
+        try {
+            Iterable<Friendship> friendships = friendshipService.getAll();
+            int numberOfFriendships = friendshipService.len();
+            if(numberOfFriendships == 1) {
+                System.out.println("[*]The only friendship from the social network is:");
+            }
+            else{
+                System.out.println("[*]The " + numberOfFriendships + " friendships from the social network are:");
+            }
+            for(Friendship friendship : friendships) {
+                System.out.println(friendship);
+            }
+        } catch(RepoException ex) {
+            printException(ex.getMessage());
+        }
+    }
+
     private void runFriendshipsMenu() {
         System.out.println();
         printFriendshipsMenu();
@@ -197,22 +285,23 @@ public class UI {
                     printMainMenu();
                     return;
                 case "1":
-                    // TODO
+                    addFriendshipUI(scanner);
                     break;
                 case "2":
                     // TODO
+                    System.out.println("Option temporarily unavailable!");
                     break;
                 case "3":
-                    // TODO
+                    removeFriendshipUI(scanner);
                     break;
                 case "4":
-                    // TODO
+                    searchFriendshipUI(scanner);
                     break;
                 case "5":
-                    // TODO
+                    numberOfFriendshipsUI(scanner);
                     break;
                 case "6":
-                    // TODO
+                    getAllFriendshipsUI(scanner);
                     break;
                 case "menu":
                     System.out.println();
