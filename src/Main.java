@@ -12,7 +12,7 @@ import validation.IValidator;
 import validation.UserValidator;
 
 public class Main {
-    public static void addDebugUsers(UserService userService) {
+    public static void addUsersDebug(UserService userService) {
         User user1  = new User("John", "O'Brien");
         User user2  = new User("William", "Day");
         User user3  = new User("Charles", "Kelly");
@@ -49,7 +49,7 @@ public class Main {
         IRepository<Long, Friendship> friendshipRepo = new InMemoryRepo<>();
         FriendshipService friendshipService = new FriendshipService(friendshipValidator, friendshipRepo, userRepo);
 
-        addDebugUsers(userService);
+        addUsersDebug(userService);
 
         UI ui = new UI(userService, friendshipService);
         ui.run();

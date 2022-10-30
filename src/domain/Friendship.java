@@ -53,7 +53,7 @@ public class Friendship extends Entity<Long> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFirstFriend(), getSecondFriend());
+        return Objects.hash(getFirstFriend().getId(), getSecondFriend().getId());
     }
 
     @Override
