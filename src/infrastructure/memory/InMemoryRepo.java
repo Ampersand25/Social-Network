@@ -22,14 +22,14 @@ public class InMemoryRepo<ID, E extends Entity<ID>> implements IRepository<ID, E
         if(entities.get(entity.getId()) != null) {
             throw new RepoException("[!]Entity already exists (there is an entity with the given id)!\n");
         }
-        try{
+        if(len() != 0) {
             Iterable<E> allEntities = getAll();
-            for(E entityFor : allEntities) {
-                if(entity.equals(entityFor)) {
-                    throw new RepoException("[!]Entity already exists!");
+            for(E existingEntity : allEntities) {
+                if(entity.equals(existingEntity)) {
+                    throw new RepoException("[!]Entity already exists!\n");
                 }
             }
-        } catch(RepoException ignored) {}
+        }
         entities.put(entity.getId(), entity);
     }
 

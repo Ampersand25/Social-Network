@@ -46,16 +46,6 @@ public class FriendshipService {
             throw new ValidationException(ex.getMessage());
         }
 
-        /*try {
-            Iterable<Friendship> friendships = getAll();
-            for(Friendship friendship : friendships) {
-                if(friendship.equals(newFriendship)) {
-                    --availableId;
-                    throw new ServiceException("[!]Friendship already exists!\n");
-                }
-            }
-        } catch(RepoException ignored) {}*/
-
         friendshipRepo.add(newFriendship);
     }
 

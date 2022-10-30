@@ -34,8 +34,39 @@ public class UI {
         System.out.println("[4] - search user after id");
         System.out.println("[5] - get the number of existing users");
         System.out.println("[6] - get all existing users");
+        System.out.println("[7] - add 10 users in the social network");
         System.out.println("*type \"menu\" to display the users menu");
         System.out.println("**type \"exit\" to exit the application");
+    }
+
+    private void addUsersDebug() {
+        User user1  = new User("John", "O'Brien");
+        User user2  = new User("William", "Day");
+        User user3  = new User("Charles", "Kelly");
+        User user4  = new User("Donald", "Castaneda");
+        User user5  = new User("Charles-Mike", "Lam");
+        User user6  = new User("Robert", "Beck");
+        User user7  = new User("O'Mikel", "Rowe");
+        User user8  = new User("Donald", "Dotson");
+        User user9  = new User("Joseph", "Tucker-Doyle");
+        User user10 = new User("Robert", "O'Gallagher");
+
+        try{
+            userService.add(user1);
+            userService.add(user2);
+            userService.add(user3);
+            userService.add(user4);
+            userService.add(user5);
+            userService.add(user6);
+            userService.add(user7);
+            userService.add(user8);
+            userService.add(user9);
+            userService.add(user10);
+        } catch(ValidationException | RepoException ex) {
+            ex.printStackTrace();
+        }
+
+        System.out.println("[+]Users added with success!");
     }
 
     private void addUserUI(@NotNull Scanner scanner) {
@@ -161,6 +192,9 @@ public class UI {
                     break;
                 case "6":
                     getAllUsersUI(scanner);
+                    break;
+                case "7":
+                    addUsersDebug();
                     break;
                 case "menu":
                     System.out.println();
