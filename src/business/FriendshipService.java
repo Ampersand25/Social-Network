@@ -36,6 +36,10 @@ public class FriendshipService {
     }
 
     public void add(Long firstFriendId, Long secondFriendId) throws ValidationException, RepoException, ServiceException {
+        if(userRepo.len() == 0) {
+            throw new ServiceException("[!]There are no users in the social network!\n");
+        }
+
         validateId(firstFriendId);
         validateId(secondFriendId);
 
