@@ -72,8 +72,4 @@ public class SuperService {
     public int numberOfCommunities() {
         return friendshipService.numberOfCommunities();
     }
-
-    public Iterable<User> getMostSociableCommunity() throws ServiceException {
-        return friendshipService.getMostSociableCommunity();
-    }
 }

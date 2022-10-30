@@ -347,18 +347,6 @@ public class UI {
         }
     }
 
-    void printMostSociableCommunityUI() {
-        try {
-            Iterable<User> mostSociableCommunity = superService.getMostSociableCommunity();
-            printSuccessMessage("[@]The most sociable community is:");
-            for(User user : mostSociableCommunity) {
-                System.out.println(user);
-            }
-        } catch(ServiceException ex) {
-            printException(ex.getMessage());
-        }
-    }
-
     private void runFriendshipsMenu() {
         System.out.println();
         printFriendshipsMenu();
@@ -394,7 +382,7 @@ public class UI {
                     printNumberOfCommunitiesUI();
                     break;
                 case "8":
-                    printMostSociableCommunityUI();
+                    System.out.println("[x]Option currently unavailable!");
                     break;
                 case "menu":
                     System.out.println();

@@ -113,13 +113,4 @@ public class FriendshipService {
         SocialNetworkGraph graph = new SocialNetworkGraph(allUsers, allFriendships);
         return graph.numberOfCommunities();
     }
-
-    public Iterable<User> getMostSociableCommunity() throws ServiceException {
-        // TODO
-        if(numberOfCommunities() == 0) {
-            throw new ServiceException("[!]There are no communities in the social network!\n");
-        }
-
-        return null;
-    }
 }
