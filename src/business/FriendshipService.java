@@ -5,8 +5,10 @@ import domain.User;
 import exception.RepoException;
 import exception.ServiceException;
 import exception.ValidationException;
-import infrastructure.IRepository;
 import validation.IValidator;
+import infrastructure.IRepository;
+
+import java.time.LocalDate;
 
 public class FriendshipService {
     private final IValidator<Friendship> validator;
@@ -34,6 +36,10 @@ public class FriendshipService {
         validateId(firstFriendId);
         validateId(secondFriendId);
 
+        if(firstFriendId == secondFriendId) {
+            throw new ServiceException("[!]A user cannot befriend himself!\n");
+        }
+
         User firstFriend = userRepo.search(firstFriendId);
         User secondFriend = userRepo.search(secondFriendId);
 
@@ -49,19 +55,30 @@ public class FriendshipService {
         friendshipRepo.add(newFriendship);
     }
 
-    public Friendship remove(Long id) throws RepoException, ServiceException {
-        validateId(id);
-        return friendshipRepo.remove(id);
+    public Friendship remove(Long friendshipId) throws RepoException, ServiceException {
+        validateId(friendshipId);
+        return friendshipRepo.remove(friendshipId);
     }
 
-    public Friendship modify(Friendship friendship) throws ValidationException, RepoException {
+    public Friendship modify(Long friendshipId, Long firstFriendId, Long secondFriendId) throws ValidationException, RepoException {
+        User firstFriend = userRepo.search(firstFriendId);
+        User secondFriend = userRepo.search(secondFriendId);
+        Friendship friendship = new Friendship(friendshipId, firstFriend, secondFriend, LocalDate.now());
         validator.validate(friendship);
         return friendshipRepo.modify(friendship);
     }
 
-    public Friendship search(Long id) throws RepoException, ServiceException {
-        validateId(id);
-        return friendshipRepo.search(id);
+    public Friendship modify(Long friendshipId, Long firstFriendId, Long secondFriendId, LocalDate date) throws ValidationException, RepoException {
+        User firstFriend = userRepo.search(firstFriendId);
+        User secondFriend = userRepo.search(secondFriendId);
+        Friendship friendship = new Friendship(friendshipId, firstFriend, secondFriend, date);
+        validator.validate(friendship);
+        return friendshipRepo.modify(friendship);
+    }
+
+    public Friendship search(Long friendshipId) throws RepoException, ServiceException {
+        validateId(friendshipId);
+        return friendshipRepo.search(friendshipId);
     }
 
     public int len() {
@@ -70,5 +87,19 @@ public class FriendshipService {
 
     public Iterable<Friendship> getAll() throws RepoException {
         return friendshipRepo.getAll();
+    }
+
+    public int numberOfCommunities() {
+        // TODO
+        return 0;
+    }
+
+    public Iterable<User> getMostSociableCommunity() throws ServiceException {
+        // TODO
+        if(numberOfCommunities() == 0) {
+            throw new ServiceException("[!]There are no communities in the social network!\n");
+        }
+
+        return null;
     }
 }

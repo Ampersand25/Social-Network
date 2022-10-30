@@ -22,6 +22,13 @@ public class Friendship extends Entity<Long> {
         this.date = date;
     }
 
+    public Friendship(Long id, User firstFriend, User secondFriend, LocalDate date) {
+        super(id);
+        this.firstFriend = firstFriend;
+        this.secondFriend = secondFriend;
+        this.date = date;
+    }
+
     public User getFirstFriend() {
         return firstFriend;
     }

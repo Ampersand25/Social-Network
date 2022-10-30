@@ -1,13 +1,14 @@
-import business.FriendshipService;
-import business.UserService;
 import domain.Friendship;
 import domain.User;
-import infrastructure.IRepository;
-import infrastructure.memory.InMemoryRepo;
-import presentation.UI;
 import validation.FriendshipValidator;
 import validation.IValidator;
 import validation.UserValidator;
+import infrastructure.IRepository;
+import infrastructure.memory.InMemoryRepo;
+import business.FriendshipService;
+import business.SuperService;
+import business.UserService;
+import presentation.UI;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,7 +20,8 @@ public class Main {
         IRepository<Long, Friendship> friendshipRepo = new InMemoryRepo<>();
         FriendshipService friendshipService = new FriendshipService(friendshipValidator, friendshipRepo, userRepo);
 
-        UI ui = new UI(userService, friendshipService);
+        SuperService superService = new SuperService(userService, friendshipService);
+        UI ui = new UI(superService);
         ui.run();
     }
 }

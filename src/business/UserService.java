@@ -4,8 +4,8 @@ import domain.User;
 import exception.RepoException;
 import exception.ServiceException;
 import exception.ValidationException;
-import infrastructure.IRepository;
 import validation.IValidator;
+import infrastructure.IRepository;
 
 public class UserService {
     private final IValidator<User> validator;
@@ -27,7 +27,8 @@ public class UserService {
         this.availableId = 0L;
     }
 
-    public void add(User user) throws ValidationException, RepoException {
+    public void add(String firstName, String lastName) throws ValidationException, RepoException {
+        User user = new User(firstName, lastName);
         user.setId(availableId++);
         try{
             validator.validate(user);
@@ -38,19 +39,20 @@ public class UserService {
         repo.add(user);
     }
 
-    public User remove(Long id) throws RepoException, ServiceException {
-        validateId(id);
-        return repo.remove(id);
+    public User remove(Long userId) throws RepoException, ServiceException {
+        validateId(userId);
+        return repo.remove(userId);
     }
 
-    public User modify(User user) throws ValidationException, RepoException {
+    public User modify(Long userId, String firstName, String lastName) throws ValidationException, RepoException {
+        User user = new User(userId, firstName, lastName);
         validator.validate(user);
         return repo.modify(user);
     }
 
-    public User search(Long id) throws RepoException, ServiceException {
-        validateId(id);
-        return repo.search(id);
+    public User search(Long userId) throws RepoException, ServiceException {
+        validateId(userId);
+        return repo.search(userId);
     }
 
     public int len() {

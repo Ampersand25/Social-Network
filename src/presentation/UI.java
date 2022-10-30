@@ -1,36 +1,40 @@
 package presentation;
 
-import business.FriendshipService;
-import business.UserService;
 import domain.Friendship;
 import domain.User;
+import exception.ValidationException;
 import exception.RepoException;
 import exception.ServiceException;
-import exception.ValidationException;
-import org.jetbrains.annotations.NotNull;
+import business.SuperService;
 import utils.ConsoleColors;
+import utils.Constants;
 
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+import org.jetbrains.annotations.NotNull;
+import java.time.LocalDate;
 
 public class UI {
-    private final UserService userService;
-    private final FriendshipService friendshipService;
+    private final SuperService superService;
 
-    public UI(UserService userService, FriendshipService friendshipService) {
-        this.userService = userService;
-        this.friendshipService = friendshipService;
+    public UI(SuperService superService) {
+        this.superService = superService;
     }
 
     private void printException(String message) {
         System.out.print(ConsoleColors.RED + message + ConsoleColors.RESET);
     }
 
+    private void printSuccessMessage(String message) {
+        System.out.println(ConsoleColors.GREEN + message + ConsoleColors.RESET);
+    }
+
     private void printUsersMenu() {
         System.out.println("~Users Menu~");
         System.out.println("[0] - back");
         System.out.println("[1] - add new user");
-        System.out.println("[2] - modify existing user");
-        System.out.println("[3] - remove existing user");
+        System.out.println("[2] - remove existing user");
+        System.out.println("[3] - modify existing user");
         System.out.println("[4] - search user after id");
         System.out.println("[5] - get the number of existing users");
         System.out.println("[6] - get all existing users");
@@ -40,77 +44,67 @@ public class UI {
     }
 
     private void addUsersDebug() {
-        User user1  = new User("John", "O'Brien");
-        User user2  = new User("William", "Day");
-        User user3  = new User("Charles", "Kelly");
-        User user4  = new User("Donald", "Castaneda");
-        User user5  = new User("Charles-Mike", "Lam");
-        User user6  = new User("Robert", "Beck");
-        User user7  = new User("O'Mikel", "Rowe");
-        User user8  = new User("Donald", "Dotson");
-        User user9  = new User("Joseph", "Tucker-Doyle");
-        User user10 = new User("Robert", "O'Gallagher");
-
         try{
-            userService.add(user1);
-            userService.add(user2);
-            userService.add(user3);
-            userService.add(user4);
-            userService.add(user5);
-            userService.add(user6);
-            userService.add(user7);
-            userService.add(user8);
-            userService.add(user9);
-            userService.add(user10);
+            superService.addUser("John", "O'Brien");
+            superService.addUser("William", "Day");
+            superService.addUser("Charles", "Kelly");
+            superService.addUser("Donald", "Castaneda");
+            superService.addUser("Charles-Mike", "Lam");
+            superService.addUser("Robert", "Beck");
+            superService.addUser("O'Mikel", "Rowe");
+            superService.addUser("Donald", "Dotson");
+            superService.addUser("Joseph", "Tucker-Doyle");
+            superService.addUser("Robert", "O'Gallagher");
+
+            printSuccessMessage("[+]All 10 users added with success!");
         } catch(ValidationException | RepoException ex) {
             ex.printStackTrace();
         }
-
-        System.out.println("[+]Users added with success!");
     }
 
     private void addUserUI(@NotNull Scanner scanner) {
         System.out.print("Introduce the first name of the new user: ");
         String firstName = scanner.nextLine();
+
         System.out.print("Introduce the last name of the new user: ");
         String lastName = scanner.nextLine();
-        User newUser = new User(firstName, lastName);
+
         try {
-            userService.add(newUser);
-            System.out.println("[+]User added with success!");
+            superService.addUser(firstName, lastName);
+            printSuccessMessage("[+]User added with success!");
         } catch (ValidationException | RepoException ex) {
             printException(ex.getMessage());
+        }
+    }
+
+    private void removeUserUI(@NotNull Scanner scanner) {
+        try {
+            System.out.print("Introduce the id of the user you want to remove: ");
+            Long userId = Long.parseLong(scanner.nextLine());
+
+            User removedUser = superService.removeUser(userId);
+            printSuccessMessage("[-]User removed with success!\nRemoved user: " + removedUser);
+        } catch(RepoException | ServiceException ex) {
+            printException(ex.getMessage());
+        } catch(NumberFormatException ex) {
+            printException("[!]Invalid id (id must be a non negative number)!\n");
         }
     }
 
     private void modifyUserUI(@NotNull Scanner scanner) {
         try {
             System.out.print("Introduce the id of the user you want to modify: ");
-            Long id = Long.parseLong(scanner.nextLine());
+            Long userId = Long.parseLong(scanner.nextLine());
+
             System.out.print("Introduce the new first name of the user you want to modify: ");
             String firstName = scanner.nextLine();
+
             System.out.print("Introduce the new last name of the user you want to modify: ");
             String lastName = scanner.nextLine();
-            User newUser = new User(id, firstName, lastName);
-            try {
-                User modifiedUser = userService.modify(newUser);
-                System.out.println("[&]User modified with success!\nModified user: " + modifiedUser);
-            } catch (ValidationException | RepoException ex) {
-                printException(ex.getMessage());
-            }
-        } catch(NumberFormatException ex) {
-            printException("[!]Invalid id (id must be a non negative number)!\n");
-        }
-    }
 
-    private void removeUserUI(@NotNull Scanner scanner) {
-        System.out.print("Introduce the id of the user you want to remove: ");
-        String idString = scanner.nextLine();
-        try {
-            Long id = Long.parseLong(idString);
-            User removedUser = userService.remove(id);
-            System.out.println("[-]User removed with success!\nRemoved user: " + removedUser);
-        } catch(ServiceException | RepoException ex) {
+            User modifiedUser = superService.modifyUser(userId, firstName, lastName);
+            printSuccessMessage("[&]User modified with success!\nModified user: " + modifiedUser);
+        } catch (ValidationException | RepoException ex) {
             printException(ex.getMessage());
         } catch(NumberFormatException ex) {
             printException("[!]Invalid id (id must be a non negative number)!\n");
@@ -118,42 +112,44 @@ public class UI {
     }
 
     private void searchUserUI(@NotNull Scanner scanner) {
-        System.out.print("Introduce the id of the user you want to search: ");
-        String idString = scanner.nextLine();
         try {
-            Long id = Long.parseLong(idString);
-            User searchedUser = userService.search(id);
-            System.out.println("[?]The user with the id " + id + " is: " + searchedUser);
-        } catch(ServiceException | RepoException ex) {
+            System.out.print("Introduce the id of the user you want to search: ");
+            Long userId = Long.parseLong(scanner.nextLine());
+
+            User searchedUser = superService.searchUser(userId);
+            printSuccessMessage("[?]The user with the id " + userId + " is: " + searchedUser);
+        } catch(RepoException | ServiceException ex) {
             printException(ex.getMessage());
         } catch(NumberFormatException ex) {
             printException("[!]Invalid id (id must be a non negative number)!\n");
         }
     }
 
-    private void numberOfUsersUI(Scanner scanner) {
-        int numberOfUsers = userService.len();
+    private void numberOfUsersUI() {
+        int numberOfUsers = superService.numberOfUsers();
         if(numberOfUsers == 0) {
-            System.out.println("[=]There are no users in the social network!");
+            printSuccessMessage("[#]There are no users in the social network!");
         }
         else if(numberOfUsers == 1) {
-            System.out.println("[=]There is only one user in the social network!");
+            printSuccessMessage("[#]There is only one user in the social network!");
         }
         else {
-            System.out.println("[=]There are " + numberOfUsers + " users in the social network!");
+            printSuccessMessage("[#]There are " + numberOfUsers + " users in the social network!");
         }
     }
 
-    private void getAllUsersUI(Scanner scanner) {
+    private void getAllUsersUI() {
         try {
-            Iterable<User> users = userService.getAll();
-            int numberOfUsers = userService.len();
+            Iterable<User> users = superService.getAllUsers();
+
+            int numberOfUsers = superService.numberOfUsers();
             if(numberOfUsers == 1) {
-                System.out.println("[*]The only user from the social network is:");
+                printSuccessMessage("[*]The only user from the social network is:");
             }
             else{
-                System.out.println("[*]The " + numberOfUsers + " users from the social network are:");
+                printSuccessMessage("[*]The " + numberOfUsers + " users from the social network are:");
             }
+
             for(User user : users) {
                 System.out.println(user);
             }
@@ -179,19 +175,19 @@ public class UI {
                     addUserUI(scanner);
                     break;
                 case "2":
-                    modifyUserUI(scanner);
+                    removeUserUI(scanner);
                     break;
                 case "3":
-                    removeUserUI(scanner);
+                    modifyUserUI(scanner);
                     break;
                 case "4":
                     searchUserUI(scanner);
                     break;
                 case "5":
-                    numberOfUsersUI(scanner);
+                    numberOfUsersUI();
                     break;
                 case "6":
-                    getAllUsersUI(scanner);
+                    getAllUsersUI();
                     break;
                 case "7":
                     addUsersDebug();
@@ -212,95 +208,145 @@ public class UI {
         System.out.println("~Friendships Menu~");
         System.out.println("[0] - back");
         System.out.println("[1] - add new friendship");
-        System.out.println("[2] - modify existing friendship");
-        System.out.println("[3] - remove existing friendship");
+        System.out.println("[2] - remove existing friendship");
+        System.out.println("[3] - modify existing friendship");
         System.out.println("[4] - search friendship after id");
         System.out.println("[5] - get the number of existing friendships");
         System.out.println("[6] - get all existing friendships");
+        System.out.println("[7] - print the number of communities");
+        System.out.println("[8] - print the most sociable community");
         System.out.println("*type \"menu\" to display the friendships menu");
         System.out.println("**type \"exit\" to exit the application");
     }
 
     private void addFriendshipUI(@NotNull Scanner scanner) {
-        System.out.print("Introduce the id of the first friend: ");
-        Long firstFriendId = 0L;
         try{
-            firstFriendId = Long.parseLong(scanner.nextLine());
-        } catch(NumberFormatException ex) {
-            printException("[!]Invalid id (id must be a non negative number)!\n");
-            return;
-        }
-        System.out.print("Introduce the id of the second friend: ");
-        Long secondFriendId = 0L;
-        try {
-            secondFriendId = Long.parseLong(scanner.nextLine());
-        } catch(NumberFormatException ex) {
-            printException("[!]Invalid id (id must be a non negative number)!\n");
-            return;
-        }
-        try {
-            friendshipService.add(firstFriendId, secondFriendId);
-            System.out.println("[+]Friendship added with success!");
+            System.out.print("Introduce the id of the first friend: ");
+            Long firstFriendId = Long.parseLong(scanner.nextLine());
+
+            System.out.print("Introduce the id of the second friend: ");
+            Long secondFriendId = Long.parseLong(scanner.nextLine());
+
+            superService.addFriendship(firstFriendId, secondFriendId);
+            printSuccessMessage("[+]Friendship added with success!");
         } catch (ValidationException | RepoException | ServiceException ex) {
             printException(ex.getMessage());
+        } catch(NumberFormatException ex) {
+            printException("[!]Invalid id (id must be a non negative number)!\n");
         }
     }
 
     private void removeFriendshipUI(@NotNull Scanner scanner) {
-        System.out.print("Introduce the id of the friendship you want to remove: ");
-        String idString = scanner.nextLine();
         try {
-            Long id = Long.parseLong(idString);
-            Friendship removedFriendship = friendshipService.remove(id);
-            System.out.println("[-]Friendship removed with success!\nRemoved friendship: " + removedFriendship);
-        } catch(ServiceException | RepoException ex) {
+            System.out.print("Introduce the id of the friendship you want to remove: ");
+            Long friendshipId = Long.parseLong(scanner.nextLine());
+
+            Friendship removedFriendship = superService.removeFriendship(friendshipId);
+            printSuccessMessage("[-]Friendship removed with success!\nRemoved friendship:\n" + removedFriendship);
+        } catch(RepoException | ServiceException ex) {
             printException(ex.getMessage());
         } catch(NumberFormatException ex) {
             printException("[!]Invalid id (id must be a non negative number)!\n");
+        }
+    }
+
+    private void modifyFriendshipUI(@NotNull Scanner scanner) {
+        try {
+            System.out.print("Introduce the id of the friendship you want to modify: ");
+            Long friendshipId = Long.parseLong(scanner.nextLine());
+
+            System.out.print("Introduce the id of the new first friend: ");
+            Long firstFriendId = Long.parseLong(scanner.nextLine());
+
+            System.out.print("Introduce the id of the new second friend: ");
+            Long secondFriendId = Long.parseLong(scanner.nextLine());
+
+            System.out.print("Introduce the date when the friendship was created: ");
+            LocalDate date = LocalDate.parse(scanner.nextLine(), Constants.DATE_TIME_FORMATTER);
+
+            Friendship modifiedFriendship = superService.modifyFriendship(friendshipId, firstFriendId, secondFriendId, date);
+            printSuccessMessage("[&]Friendship modified with success!\nModified friendship:\n" + modifiedFriendship);
+        } catch (ValidationException | RepoException ex) {
+            printException(ex.getMessage());
+        } catch(NumberFormatException ex) {
+            printException("[!]Invalid id (id must be a non negative number)!\n");
+        } catch(DateTimeParseException ex) {
+            printException("[!]Invalid date (the format of the date must be \"yyyy-MM-dd\")!\n");
         }
     }
 
     private void searchFriendshipUI(@NotNull Scanner scanner) {
-        System.out.print("Introduce the id of the friendship you want to search: ");
-        String idString = scanner.nextLine();
         try {
-            Long id = Long.parseLong(idString);
-            Friendship searchedFriendship = friendshipService.search(id);
-            System.out.println("[?]The friendship with the id " + id + " is: " + searchedFriendship);
-        } catch(ServiceException | RepoException ex) {
+            System.out.print("Introduce the id of the friendship you want to search: ");
+            Long friendshipId = Long.parseLong(scanner.nextLine());
+
+            Friendship searchedFriendship = superService.searchFriendship(friendshipId);
+            printSuccessMessage("[?]The friendship with the id " + friendshipId + " is:\n" + searchedFriendship);
+        } catch(RepoException | ServiceException ex) {
             printException(ex.getMessage());
         } catch(NumberFormatException ex) {
             printException("[!]Invalid id (id must be a non negative number)!\n");
         }
     }
 
-    private void numberOfFriendshipsUI(Scanner scanner) {
-        int numberOfFriendships = friendshipService.len();
+    private void numberOfFriendshipsUI() {
+        int numberOfFriendships = superService.numberOfFriendships();
         if(numberOfFriendships == 0) {
-            System.out.println("[=]There are no friendships in the social network!");
+            printSuccessMessage("[#]There are no friendships in the social network!");
         }
         else if(numberOfFriendships == 1) {
-            System.out.println("[=]There is only one friendship in the social network!");
+            printSuccessMessage("[#]There is only one friendship in the social network!");
         }
         else {
-            System.out.println("[=]There are " + numberOfFriendships + " friendships in the social network!");
+            printSuccessMessage("[#]There are " + numberOfFriendships + " friendships in the social network!");
         }
     }
 
-    private void getAllFriendshipsUI(Scanner scanner) {
+    private void getAllFriendshipsUI() {
         try {
-            Iterable<Friendship> friendships = friendshipService.getAll();
-            int numberOfFriendships = friendshipService.len();
+            Iterable<Friendship> friendships = superService.getAllFriendships();
+
+            int numberOfFriendships = superService.numberOfFriendships();
             if(numberOfFriendships == 1) {
-                System.out.println("[*]The only friendship from the social network is:");
+                printSuccessMessage("[*]The only friendship from the social network is:");
             }
             else{
-                System.out.println("[*]The " + numberOfFriendships + " friendships from the social network are:");
+                printSuccessMessage("[*]The " + numberOfFriendships + " friendships from the social network are:");
             }
+
+            int numberOfDisplayedFriendships = 0;
             for(Friendship friendship : friendships) {
+                if(numberOfDisplayedFriendships++ > 0) {
+                    System.out.println();
+                }
                 System.out.println(friendship);
             }
         } catch(RepoException ex) {
+            printException(ex.getMessage());
+        }
+    }
+
+    void printNumberOfCommunitiesUI() {
+        int communities = superService.numberOfCommunities();
+        if(communities == 0) {
+            printSuccessMessage("[=]There are no communities in the social network!");
+        }
+        else if(communities == 1) {
+            printSuccessMessage("[=]There is only one community in the social network!");
+        }
+        else {
+            printSuccessMessage("[=]There are " + communities + " communities in the social network!");
+        }
+    }
+
+    void printMostSociableCommunityUI() {
+        try {
+            Iterable<User> mostSociableCommunity = superService.getMostSociableCommunity();
+            printSuccessMessage("[@]The most sociable community is:");
+            for(User user : mostSociableCommunity) {
+                System.out.println(user);
+            }
+        } catch(ServiceException ex) {
             printException(ex.getMessage());
         }
     }
@@ -322,20 +368,25 @@ public class UI {
                     addFriendshipUI(scanner);
                     break;
                 case "2":
-                    // TODO
-                    System.out.println("Option temporarily unavailable!");
+                    removeFriendshipUI(scanner);
                     break;
                 case "3":
-                    removeFriendshipUI(scanner);
+                    modifyFriendshipUI(scanner);
                     break;
                 case "4":
                     searchFriendshipUI(scanner);
                     break;
                 case "5":
-                    numberOfFriendshipsUI(scanner);
+                    numberOfFriendshipsUI();
                     break;
                 case "6":
-                    getAllFriendshipsUI(scanner);
+                    getAllFriendshipsUI();
+                    break;
+                case "7":
+                    printNumberOfCommunitiesUI();
+                    break;
+                case "8":
+                    printMostSociableCommunityUI();
                     break;
                 case "menu":
                     System.out.println();
