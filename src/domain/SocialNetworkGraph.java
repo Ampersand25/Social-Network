@@ -1,5 +1,8 @@
 package domain;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 import org.jetbrains.annotations.NotNull;
 
 public class SocialNetworkGraph {
@@ -76,5 +79,47 @@ public class SocialNetworkGraph {
 
     public int numberOfCommunities() {
         return dfs();
+    }
+
+    private @NotNull ArrayList<Long> bfsVisit(int src) {
+        ArrayList<Long> community = new ArrayList<>();
+
+        LinkedList<Long> queue = new LinkedList<Long>();
+
+        visitedNodes[src] = true;
+        queue.add((long)src);
+
+        while(!queue.isEmpty()) {
+            src = queue.poll().intValue();
+            community.add((long)src);
+
+            for(int i = 0; i < size; ++i) {
+                if(adjacentMatrix[src][i] && !visitedNodes[i]) {
+                    visitedNodes[i] = true;
+                    queue.add((long)i);
+                }
+            }
+        }
+
+        return community;
+    }
+
+    private @NotNull ArrayList<ArrayList<Long>> bfs() {
+        ArrayList<ArrayList<Long>> communities = new ArrayList<>();
+
+        visitedNodes = new boolean[size];
+        initVisitedNodes();
+
+        for(int i = 0; i < size; ++i) {
+            if(!visitedNodes[i]) {
+                communities.add(bfsVisit(i));
+            }
+        }
+
+        return communities;
+    }
+
+    public ArrayList<ArrayList<Long>> getAllCommunities() {
+        return bfs();
     }
 }

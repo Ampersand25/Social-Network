@@ -7,6 +7,7 @@ import exception.RepoException;
 import exception.ServiceException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class SuperService {
     private final UserService userService;
@@ -71,5 +72,9 @@ public class SuperService {
 
     public int numberOfCommunities() {
         return friendshipService.numberOfCommunities();
+    }
+
+    public ArrayList<ArrayList<Long>> getAllCommunities() throws RepoException {
+        return friendshipService.getAllCommunities();
     }
 }

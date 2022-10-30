@@ -10,6 +10,7 @@ import utils.ConsoleColors;
 import utils.Constants;
 
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.LocalDate;
 
@@ -222,6 +223,7 @@ public class UI {
         System.out.println("[6] - get all existing friendships");
         System.out.println("[7] - print the number of communities");
         System.out.println("[8] - print the most sociable community");
+        System.out.println("[9] - get all communities from the social network");
         System.out.println("*type \"menu\" to display the friendships menu");
         System.out.println("**type \"exit\" to exit the application");
     }
@@ -347,6 +349,55 @@ public class UI {
         }
     }
 
+    void getAllCommunitiesUI() {
+        try {
+            ArrayList<ArrayList<Long>> communities = superService.getAllCommunities();
+
+            int numberOfCommunities = communities.size();
+            if(numberOfCommunities == 1) {
+                printSuccessMessage("The only community from the social network is:");
+            }
+            else {
+                printSuccessMessage("All " + numberOfCommunities + " communities from the social network are:");
+            }
+
+            for(int i = 0; i < numberOfCommunities; ++i) {
+                if(i != 0) {
+                    System.out.println();
+                }
+
+                if(numberOfCommunities != 1) {
+                    printSuccessMessage("Community #" + (i + 1) + " is:");
+                }
+
+                int currentCommunitySize = communities.get(i).size();
+                for(int j = 0; j < currentCommunitySize; ++j) {
+                    try {
+                        printSuccessMessage(superService.searchUser(communities.get(i).get(j)).toString());
+                    } catch(RepoException | ServiceException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        } catch(RepoException ex) {
+            try {
+                Iterable<User> users = superService.getAllUsers();
+                printSuccessMessage("All " + superService.numberOfUsers() + " communities from the social network are:");
+
+                int i = 0;
+                for(User user : users) {
+                    if(i != 0) {
+                        System.out.println();
+                    }
+
+                    printSuccessMessage("Community #" + ++i + " is:\n" + user.toString());
+                }
+            } catch (RepoException e) {
+                printException("[!]There are no users in the social network!\n");
+            }
+        }
+    }
+
     private void runFriendshipsMenu() {
         System.out.println();
         printFriendshipsMenu();
@@ -383,6 +434,9 @@ public class UI {
                     break;
                 case "8":
                     System.out.println("[x]Option currently unavailable!");
+                    break;
+                case "9":
+                    getAllCommunitiesUI();
                     break;
                 case "menu":
                     System.out.println();

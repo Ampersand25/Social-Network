@@ -10,6 +10,7 @@ import validation.IValidator;
 import infrastructure.IRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class FriendshipService {
     private final IValidator<Friendship> validator;
@@ -38,7 +39,7 @@ public class FriendshipService {
         validateId(firstFriendId);
         validateId(secondFriendId);
 
-        if(firstFriendId == secondFriendId) {
+        if(firstFriendId.equals(secondFriendId)) {
             throw new ServiceException("[!]A user cannot befriend himself!\n");
         }
 
@@ -112,5 +113,10 @@ public class FriendshipService {
 
         SocialNetworkGraph graph = new SocialNetworkGraph(allUsers, allFriendships);
         return graph.numberOfCommunities();
+    }
+
+    public ArrayList<ArrayList<Long>> getAllCommunities() throws RepoException {
+        SocialNetworkGraph graph = new SocialNetworkGraph(userRepo.getAll(), friendshipRepo.getAll());
+        return graph.getAllCommunities();
     }
 }
