@@ -1,10 +1,11 @@
 package business;
 
-import domain.Friendship;
+import domain.SocialNetworkGraph;
 import domain.User;
+import domain.Friendship;
+import exception.ValidationException;
 import exception.RepoException;
 import exception.ServiceException;
-import exception.ValidationException;
 import validation.IValidator;
 import infrastructure.IRepository;
 
@@ -20,6 +21,7 @@ public class FriendshipService {
         if(id == null) {
             throw new ServiceException("[!]Invalid id (id must not be null)!\n");
         }
+
         if(id < 0L) {
             throw new ServiceException("[!]Invalid id (id must be greater or equal with 0)!\n");
         }
@@ -63,16 +65,20 @@ public class FriendshipService {
     public Friendship modify(Long friendshipId, Long firstFriendId, Long secondFriendId) throws ValidationException, RepoException {
         User firstFriend = userRepo.search(firstFriendId);
         User secondFriend = userRepo.search(secondFriendId);
+
         Friendship friendship = new Friendship(friendshipId, firstFriend, secondFriend, LocalDate.now());
         validator.validate(friendship);
+
         return friendshipRepo.modify(friendship);
     }
 
     public Friendship modify(Long friendshipId, Long firstFriendId, Long secondFriendId, LocalDate date) throws ValidationException, RepoException {
         User firstFriend = userRepo.search(firstFriendId);
         User secondFriend = userRepo.search(secondFriendId);
+
         Friendship friendship = new Friendship(friendshipId, firstFriend, secondFriend, date);
         validator.validate(friendship);
+
         return friendshipRepo.modify(friendship);
     }
 
@@ -90,8 +96,22 @@ public class FriendshipService {
     }
 
     public int numberOfCommunities() {
-        // TODO
-        return 0;
+        Iterable<User> allUsers;
+        try {
+            allUsers = userRepo.getAll();
+        } catch(RepoException repoException) {
+            return 0;
+        }
+
+        Iterable<Friendship> allFriendships;
+        try {
+            allFriendships = friendshipRepo.getAll();
+        } catch(RepoException repoException) {
+            return userRepo.len();
+        }
+
+        SocialNetworkGraph graph = new SocialNetworkGraph(allUsers, allFriendships);
+        return graph.numberOfCommunities();
     }
 
     public Iterable<User> getMostSociableCommunity() throws ServiceException {

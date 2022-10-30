@@ -11,8 +11,9 @@ import utils.Constants;
 
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
-import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
+
+import org.jetbrains.annotations.NotNull;
 
 public class UI {
     private final SuperService superService;
@@ -45,16 +46,16 @@ public class UI {
 
     private void addUsersDebug() {
         try{
-            superService.addUser("John", "O'Brien");
-            superService.addUser("William", "Day");
-            superService.addUser("Charles", "Kelly");
-            superService.addUser("Donald", "Castaneda");
-            superService.addUser("Charles-Mike", "Lam");
-            superService.addUser("Robert", "Beck");
-            superService.addUser("O'Mikel", "Rowe");
-            superService.addUser("Donald", "Dotson");
-            superService.addUser("Joseph", "Tucker-Doyle");
-            superService.addUser("Robert", "O'Gallagher");
+            superService.addUser("John", "O'Brien", LocalDate.of(1998, 10, 15));
+            superService.addUser("William", "Day", LocalDate.of(1988, 12, 30));
+            superService.addUser("Charles", "Kelly", LocalDate.of(1996, 3, 13));
+            superService.addUser("Donald", "Castaneda", LocalDate.of(1998, 7, 4));
+            superService.addUser("Charles-Mike", "Lam", LocalDate.of(1986, 4, 15));
+            superService.addUser("Robert", "Beck", LocalDate.of(1990, 7, 23));
+            superService.addUser("O'Mikel", "Rowe", LocalDate.of(1984, 3, 20));
+            superService.addUser("Donald", "Dotson", LocalDate.of(1989, 9, 5));
+            superService.addUser("Joseph", "Tucker-Doyle", LocalDate.of(2001, 1, 22));
+            superService.addUser("Robert", "O'Gallagher", LocalDate.of(1994, 12, 6));
 
             printSuccessMessage("[+]All 10 users added with success!");
         } catch(ValidationException | RepoException ex) {
@@ -70,10 +71,15 @@ public class UI {
         String lastName = scanner.nextLine();
 
         try {
-            superService.addUser(firstName, lastName);
+            System.out.print("Introduce the birthday of the new user: ");
+            LocalDate birthday = LocalDate.parse(scanner.nextLine(), Constants.DATE_TIME_FORMATTER);
+
+            superService.addUser(firstName, lastName, birthday);
             printSuccessMessage("[+]User added with success!");
         } catch (ValidationException | RepoException ex) {
             printException(ex.getMessage());
+        } catch(DateTimeParseException ex) {
+            printException("[!]Invalid date (the format of the date must be \"yyyy-MM-dd\")!\n");
         }
     }
 
@@ -151,7 +157,8 @@ public class UI {
             }
 
             for(User user : users) {
-                System.out.println(user);
+                //System.out.println(user);
+                printSuccessMessage(user.toString());
             }
         } catch(RepoException ex) {
             printException(ex.getMessage());
@@ -319,7 +326,8 @@ public class UI {
                 if(numberOfDisplayedFriendships++ > 0) {
                     System.out.println();
                 }
-                System.out.println(friendship);
+                //System.out.println(friendship);
+                printSuccessMessage(friendship.toString());
             }
         } catch(RepoException ex) {
             printException(ex.getMessage());

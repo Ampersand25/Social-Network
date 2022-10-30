@@ -1,7 +1,7 @@
 package business;
 
-import domain.Friendship;
 import domain.User;
+import domain.Friendship;
 import exception.ValidationException;
 import exception.RepoException;
 import exception.ServiceException;
@@ -17,8 +17,8 @@ public class SuperService {
         this.friendshipService = friendshipService;
     }
 
-    public void addUser(String firstName, String lastName) throws ValidationException, RepoException {
-        userService.add(firstName, lastName);
+    public void addUser(String firstName, String lastName, LocalDate birthday) throws ValidationException, RepoException {
+        userService.add(firstName, lastName, birthday);
     }
 
     public User removeUser(Long userId) throws RepoException, ServiceException {

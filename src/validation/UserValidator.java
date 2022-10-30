@@ -3,26 +3,29 @@ package validation;
 import domain.User;
 import exception.ValidationException;
 
+import java.time.LocalDate;
+
 public class UserValidator implements IValidator<User> {
     private boolean validName(String name) {
-        if(name.length() == 0) {
+        int nameLength = name.length();
+        if(nameLength == 0) {
             return false;
         }
 
-        char firstCharName = name.charAt(0);
-        if(!Character.isDigit(firstCharName) && !Character.isUpperCase(firstCharName)) {
+        char firstCharacterName = name.charAt(0);
+        if(!Character.isDigit(firstCharacterName) && !Character.isUpperCase(firstCharacterName)) {
             return false;
         }
 
-        for(int index = 1; index < name.length() - 1; ++index) {
+        for(int index = 1; index < nameLength - 1; ++index) {
             char currentCharacter = name.charAt(index);
             if(!Character.isLetterOrDigit(currentCharacter) && currentCharacter != '\'' && currentCharacter != '-') {
                 return false;
             }
         }
 
-        char lastCharName = name.charAt(name.length() - 1);
-        if(!Character.isLetterOrDigit(lastCharName)) {
+        char lastCharacterName = name.charAt(nameLength - 1);
+        if(!Character.isLetterOrDigit(lastCharacterName)) {
             return false;
         }
 
@@ -33,25 +36,42 @@ public class UserValidator implements IValidator<User> {
     public void validate(User user) throws ValidationException {
         String err = new String("");
 
-        if(user.getId() == null) {
+        Long userId = user.getId();
+        if(userId == null) {
             err += "[!]Invalid user id (id must not be null)!\n";
         }
-        else if(user.getId() < 0L) {
+        else if(userId < 0L) {
             err += "[!]Invalid user id (id must be non-negative)!\n";
         }
 
-        if(user.getFirstName() == null) {
+        String userFirstName = user.getFirstName();
+        if(userFirstName == null) {
             err += "[!]Invalid first name (first name must not be null)!\n";
         }
-        else if(!validName(user.getFirstName())) {
+        else if(!validName(userFirstName)) {
             err += "[!]Invalid first name!\n";
         }
 
-        if(user.getLastName() == null) {
+        String userLastName = user.getLastName();
+        if(userLastName == null) {
             err += "[!]Invalid last name (last name must not be null)!\n";
         }
-        else if(!validName(user.getLastName())) {
+        else if(!validName(userLastName)) {
             err += "[!]Invalid last name!\n";
+        }
+
+        LocalDate userBirthday = user.getBirthday();
+        if(userBirthday == null) {
+            err += "[!]Invalid birthday (birthday must not be null)!\n";
+        }
+        else if(userBirthday.isAfter(LocalDate.now())) {
+            err += "[!]Invalid birthday (birthday must not be in the future)!\n";
+        }
+        else if(userBirthday.isAfter(LocalDate.now().minusYears(3))) {
+            err += "[!]Invalid birthday (user must not be younger than 3 years old)!\n";
+        }
+        else if(userBirthday.isBefore(LocalDate.now().minusYears(120))) {
+            err += "[!]Invalid birthday (user must not be older than 120 years old)!\n";
         }
 
         if(err.length() != 0) {

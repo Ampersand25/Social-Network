@@ -10,10 +10,11 @@ public class FriendshipValidator implements IValidator<Friendship> {
     public void validate(Friendship friendship) throws ValidationException {
         String err = new String("");
 
-        if(friendship.getId() == null) {
+        Long friendshipId = friendship.getId();
+        if(friendshipId == null) {
             err += "[!]Invalid friendship id (id must not be null)!\n";
         }
-        else if(friendship.getId() < 0L) {
+        else if(friendshipId < 0L) {
             err += "[!]Invalid friendship id (id must be non-negative)!\n";
         }
 
@@ -25,13 +26,14 @@ public class FriendshipValidator implements IValidator<Friendship> {
             err += "[!]Invalid second friend (second friend must not be null)!\n";
         }
 
-        if(friendship.getDate() == null) {
+        LocalDate friendshipDate = friendship.getDate();
+        if(friendshipDate == null) {
             err += "[!]Invalid date (date must not be null)!\n";
         }
-        else if(friendship.getDate().isAfter(LocalDate.now())) {
+        else if(friendshipDate.isAfter(LocalDate.now())) {
             err += "[!]Invalid date (date must not be in the future)!\n";
         }
-        else if(friendship.getDate().isBefore(LocalDate.now().minusYears(120))) {
+        else if(friendshipDate.isBefore(LocalDate.now().minusYears(120))) {
             err += "[!]Invalid date (date must be sooner than 120 years)!\n";
         }
 

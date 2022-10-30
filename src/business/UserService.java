@@ -1,11 +1,13 @@
 package business;
 
 import domain.User;
+import exception.ValidationException;
 import exception.RepoException;
 import exception.ServiceException;
-import exception.ValidationException;
 import validation.IValidator;
 import infrastructure.IRepository;
+
+import java.time.LocalDate;
 
 public class UserService {
     private final IValidator<User> validator;
@@ -16,6 +18,7 @@ public class UserService {
         if(id == null) {
             throw new ServiceException("[!]Invalid id (id must not be null)!\n");
         }
+
         if(id < 0L) {
             throw new ServiceException("[!]Invalid id (id must be greater or equal with 0)!\n");
         }
@@ -27,15 +30,17 @@ public class UserService {
         this.availableId = 0L;
     }
 
-    public void add(String firstName, String lastName) throws ValidationException, RepoException {
-        User user = new User(firstName, lastName);
+    public void add(String firstName, String lastName, LocalDate birthday) throws ValidationException, RepoException {
+        User user = new User(firstName, lastName, birthday);
         user.setId(availableId++);
+
         try{
             validator.validate(user);
         } catch(ValidationException ex) {
             --availableId;
             throw new ValidationException(ex.getMessage());
         }
+
         repo.add(user);
     }
 
@@ -45,8 +50,14 @@ public class UserService {
     }
 
     public User modify(Long userId, String firstName, String lastName) throws ValidationException, RepoException {
-        User user = new User(userId, firstName, lastName);
+        LocalDate birthday = LocalDate.now();
+        try {
+            birthday = search(userId).getBirthday();
+        } catch (ServiceException ignored) {}
+
+        User user = new User(userId, firstName, lastName, birthday);
         validator.validate(user);
+
         return repo.modify(user);
     }
 
