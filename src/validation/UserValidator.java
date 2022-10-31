@@ -2,11 +2,12 @@ package validation;
 
 import domain.User;
 import exception.ValidationException;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 
 public class UserValidator implements IValidator<User> {
-    private boolean validName(String name) {
+    private boolean validName(@NotNull String name) {
         int nameLength = name.length();
         if(nameLength == 0) {
             return false;
@@ -33,7 +34,7 @@ public class UserValidator implements IValidator<User> {
     }
 
     @Override
-    public void validate(User user) throws ValidationException {
+    public void validate(@NotNull User user) throws ValidationException {
         String err = new String("");
 
         Long userId = user.getId();

@@ -50,7 +50,14 @@ public class FriendshipService {
         User firstFriend = userRepo.search(firstFriendId);
         User secondFriend = userRepo.search(secondFriendId);
 
-        Friendship newFriendship = new Friendship(firstFriend, secondFriend);
+        Friendship newFriendship;
+        if(firstFriendId <= secondFriendId) {
+            newFriendship = new Friendship(firstFriend, secondFriend);
+        }
+        else {
+            newFriendship = new Friendship(secondFriend, firstFriend);
+        }
+
         newFriendship.setId(availableId++);
         try{
             validator.validate(newFriendship);
@@ -71,7 +78,14 @@ public class FriendshipService {
         User firstFriend = userRepo.search(firstFriendId);
         User secondFriend = userRepo.search(secondFriendId);
 
-        Friendship friendship = new Friendship(friendshipId, firstFriend, secondFriend, LocalDate.now());
+        Friendship friendship;
+        if(firstFriendId <= secondFriendId) {
+            friendship = new Friendship(friendshipId, firstFriend, secondFriend, LocalDate.now());
+        }
+        else {
+            friendship = new Friendship(friendshipId, secondFriend, firstFriend, LocalDate.now());
+        }
+
         validator.validate(friendship);
 
         return friendshipRepo.modify(friendship);
@@ -81,7 +95,14 @@ public class FriendshipService {
         User firstFriend = userRepo.search(firstFriendId);
         User secondFriend = userRepo.search(secondFriendId);
 
-        Friendship friendship = new Friendship(friendshipId, firstFriend, secondFriend, date);
+        Friendship friendship;
+        if(firstFriendId <= secondFriendId) {
+            friendship = new Friendship(friendshipId, firstFriend, secondFriend, date);
+        }
+        else {
+            friendship = new Friendship(friendshipId, secondFriend, firstFriend, date);
+        }
+
         validator.validate(friendship);
 
         return friendshipRepo.modify(friendship);
