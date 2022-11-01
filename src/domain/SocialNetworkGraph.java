@@ -36,12 +36,12 @@ public class SocialNetworkGraph {
         adjacentMatrix = new boolean[size][size];
         resetAdjacentMatrix();
 
-        for(Friendship friendship : friendships) {
+        friendships.forEach(friendship -> {
             int x = friendship.getFirstFriend().getId().intValue();
             int y = friendship.getSecondFriend().getId().intValue();
 
             adjacentMatrix[x][y] = adjacentMatrix[y][x] = true;
-        }
+        });
     }
 
     private void initVisitedNodes() {
@@ -84,7 +84,6 @@ public class SocialNetworkGraph {
 
     private @NotNull List<Long> bfsVisit(int src) {
         List<Long> community = new ArrayList<>();
-
         LinkedList<Long> queue = new LinkedList<Long>();
 
         visitedNodes[src] = true;

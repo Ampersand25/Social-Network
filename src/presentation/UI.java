@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -139,10 +140,7 @@ public class UI {
                 printSuccessMessage("[*]The " + numberOfUsers + " users from the social network are:");
             }
 
-            for(User user : users) {
-                //System.out.println(user);
-                printSuccessMessage(user.toString());
-            }
+            users.forEach(user -> printSuccessMessage(user.toString()));
         } catch(RepoException ex) {
             printException(ex.getMessage());
         }
@@ -164,9 +162,7 @@ public class UI {
                 printSuccessMessage("Friends of user \"" + superService.searchUser(userId).toString() + "\" are:");
             }
 
-            for(User friend : friendsOfUser) {
-                printSuccessMessage(friend.toString());
-            }
+            friendsOfUser.forEach(friend -> printSuccessMessage(friend.toString()));
         } catch(RepoException | ServiceException ex) {
             printException(ex.getMessage());
         } catch(NumberFormatException ex) {
@@ -353,14 +349,14 @@ public class UI {
                 printSuccessMessage("[*]The " + numberOfFriendships + " friendships from the social network are:");
             }
 
-            int numberOfDisplayedFriendships = 0;
-            for(Friendship friendship : friendships) {
-                if(numberOfDisplayedFriendships++ > 0) {
+            AtomicInteger numberOfDisplayedFriendships = new AtomicInteger();
+            friendships.forEach(friendship -> {
+                if(numberOfDisplayedFriendships.getAndIncrement() > 0) {
                     System.out.println();
                 }
-                //System.out.println(friendship);
+
                 printSuccessMessage(friendship.toString());
-            }
+            });
         } catch(RepoException ex) {
             printException(ex.getMessage());
         }
@@ -414,14 +410,14 @@ public class UI {
                 Iterable<User> users = superService.getAllUsers();
                 printSuccessMessage("All " + superService.numberOfUsers() + " communities from the social network are:");
 
-                int i = 0;
-                for(User user : users) {
-                    if(i != 0) {
+                AtomicInteger i = new AtomicInteger();
+                users.forEach(user -> {
+                    if(i.get() != 0) {
                         System.out.println();
                     }
 
-                    printSuccessMessage("Community #" + ++i + " is:\n" + user.toString());
-                }
+                    printSuccessMessage("Community #" + i.incrementAndGet() + " is:\n" + user.toString());
+                });
             } catch (RepoException e) {
                 printException("[!]There are no users in the social network!\n");
             }

@@ -69,7 +69,6 @@ public class InMemoryRepo<ID, E extends Entity<ID>> implements IRepository<ID, E
             throw new RepoException("[!]There is no entity in the repository with the given id!\n");
         }
 
-        entities.remove(entity.getId());
         entities.put(entity.getId(), entity);
         return modifiedEntity;
     }
