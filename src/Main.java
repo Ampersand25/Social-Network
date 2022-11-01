@@ -14,6 +14,7 @@ public class Main {
     public static void main(String[] args) {
         // TODO: write documentation
         // TODO: create test functions
+        // TODO: add email address to user entity
 
         IValidator<User> userValidator = new UserValidator();
         IRepository<Long, User> userRepo = new InMemoryRepo<>();
