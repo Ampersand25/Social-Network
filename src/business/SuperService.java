@@ -42,6 +42,10 @@ public class SuperService {
         return userService.getAll();
     }
 
+    public List<User> getFriendsOfUser(Long userId) throws RepoException, ServiceException {
+        return userService.getFriendsOfUser(userId);
+    }
+
     public void addFriendship(Long firstFriendId, Long secondFriendId) throws ValidationException, RepoException, ServiceException {
         friendshipService.add(firstFriendId, secondFriendId);
     }

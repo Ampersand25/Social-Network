@@ -1,17 +1,21 @@
 package domain;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.List;
+import java.time.LocalDate;
 
 public class User extends Entity<Long> {
     private String firstName;
     private String lastName;
     private final LocalDate birthday;
+    private List<User> friendList;
 
     public User(String firstName, String lastName, LocalDate birthday) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
+        friendList = new ArrayList<>();
     }
 
     public User(Long id, String firstName, String lastName, LocalDate birthday) {
@@ -39,6 +43,14 @@ public class User extends Entity<Long> {
 
     public LocalDate getBirthday() {
         return birthday;
+    }
+
+    public List<User> getFriendList() {
+        return friendList;
+    }
+
+    public void setFriendList(List<User> friendList) {
+        this.friendList = friendList;
     }
 
     @Override

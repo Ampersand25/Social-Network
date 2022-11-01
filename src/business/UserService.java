@@ -8,6 +8,9 @@ import validation.IValidator;
 import infrastructure.IRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserService {
     private final IValidator<User> validator;
@@ -46,19 +49,45 @@ public class UserService {
 
     public User remove(Long userId) throws RepoException, ServiceException {
         validateId(userId);
-        return repo.remove(userId);
+
+        User removedUser = repo.remove(userId);
+        Iterable<User> allUsers = repo.getAll();
+        allUsers.forEach(user -> {
+            List<User> friendListOfCurrentUser = user.getFriendList();
+            List<User> filteredFriendListOfCurrentUser = friendListOfCurrentUser.stream().filter(friendOfUser -> !friendOfUser.equals(removedUser)).collect(Collectors.toList());
+            user.setFriendList(filteredFriendListOfCurrentUser);
+        });
+
+        return removedUser;
     }
 
     public User modify(Long userId, String firstName, String lastName) throws ValidationException, RepoException {
         LocalDate birthday = LocalDate.now();
+        List<User> friendList = new ArrayList<>();
         try {
-            birthday = search(userId).getBirthday();
+            User searchedUser = search(userId);
+            birthday = searchedUser.getBirthday();
+            friendList = searchedUser.getFriendList();
         } catch (ServiceException ignored) {}
 
-        User user = new User(userId, firstName, lastName, birthday);
-        validator.validate(user);
+        User newUser = new User(userId, firstName, lastName, birthday);
+        newUser.setFriendList(friendList);
+        validator.validate(newUser);
 
-        return repo.modify(user);
+        User modifiedUser = repo.modify(newUser);
+        Iterable<User> allUsers = repo.getAll();
+        allUsers.forEach(user -> {
+            List<User> friendListOfCurrentUser = user.getFriendList();
+            List<User> filteredFriendListOfCurrentUser = friendListOfCurrentUser.stream().filter(friendOfUser -> !friendOfUser.equals(modifiedUser)).collect(Collectors.toList());
+
+            if(!friendListOfCurrentUser.equals(filteredFriendListOfCurrentUser)) {
+                filteredFriendListOfCurrentUser.add(newUser);
+            }
+
+            user.setFriendList(filteredFriendListOfCurrentUser);
+        });
+
+        return modifiedUser;
     }
 
     public User search(Long userId) throws RepoException, ServiceException {
@@ -72,5 +101,10 @@ public class UserService {
 
     public Iterable<User> getAll() throws RepoException {
         return repo.getAll();
+    }
+
+    public List<User> getFriendsOfUser(Long userId) throws RepoException, ServiceException {
+        validateId(userId);
+        return repo.search(userId).getFriendList();
     }
 }

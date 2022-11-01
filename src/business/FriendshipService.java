@@ -18,6 +18,26 @@ public class FriendshipService {
     private final IRepository<Long, User> userRepo;
     private Long availableId;
 
+    private void addFriendToUser(User firstUser, User secondUser) {
+        List<User> firstUserFriendList = firstUser.getFriendList();
+        firstUserFriendList.add(secondUser);
+        firstUser.setFriendList(firstUserFriendList);
+
+        List<User> secondUserFriendList = secondUser.getFriendList();
+        secondUserFriendList.add(firstUser);
+        secondUser.setFriendList(secondUserFriendList);
+    }
+
+    private void deleteFriendFromUser(User firstUser, User secondUser) {
+        List<User> firstUserFriendList = firstUser.getFriendList();
+        List<User> filteredFirstUserFriendList = firstUserFriendList.stream().filter(user -> !user.equals(secondUser)).toList();
+        firstUser.setFriendList(filteredFirstUserFriendList);
+
+        List<User> secondUserFriendList = secondUser.getFriendList();
+        List<User> filteredSecondUserFriendList = secondUserFriendList.stream().filter(user -> !user.equals(firstUser)).toList();
+        secondUser.setFriendList(filteredSecondUserFriendList);
+    }
+
     private void validateId(Long id) throws ServiceException {
         if(id == null) {
             throw new ServiceException("[!]Invalid id (id must not be null)!\n");
@@ -67,11 +87,16 @@ public class FriendshipService {
         }
 
         friendshipRepo.add(newFriendship);
+        addFriendToUser(firstFriend, secondFriend);
     }
 
     public Friendship remove(Long friendshipId) throws RepoException, ServiceException {
         validateId(friendshipId);
-        return friendshipRepo.remove(friendshipId);
+
+        Friendship removedFriendship = friendshipRepo.remove(friendshipId);
+        deleteFriendFromUser(removedFriendship.getFirstFriend(), removedFriendship.getSecondFriend());
+
+        return removedFriendship;
     }
 
     public Friendship modify(Long friendshipId, Long firstFriendId, Long secondFriendId) throws ValidationException, RepoException {
@@ -88,7 +113,13 @@ public class FriendshipService {
 
         validator.validate(friendship);
 
-        return friendshipRepo.modify(friendship);
+        Friendship modifiedFriendship = friendshipRepo.modify(friendship);
+        if(!friendship.getFirstFriend().equals(modifiedFriendship.getFirstFriend()) || !friendship.getSecondFriend().equals(modifiedFriendship.getSecondFriend())) {
+            deleteFriendFromUser(modifiedFriendship.getFirstFriend(), modifiedFriendship.getSecondFriend());
+            addFriendToUser(friendship.getFirstFriend(), friendship.getSecondFriend());
+        }
+
+        return modifiedFriendship;
     }
 
     public Friendship modify(Long friendshipId, Long firstFriendId, Long secondFriendId, LocalDate date) throws ValidationException, RepoException {
@@ -105,7 +136,13 @@ public class FriendshipService {
 
         validator.validate(friendship);
 
-        return friendshipRepo.modify(friendship);
+        Friendship modifiedFriendship = friendshipRepo.modify(friendship);
+        if(!friendship.getFirstFriend().equals(modifiedFriendship.getFirstFriend()) || !friendship.getSecondFriend().equals(modifiedFriendship.getSecondFriend())) {
+            deleteFriendFromUser(modifiedFriendship.getFirstFriend(), modifiedFriendship.getSecondFriend());
+            addFriendToUser(friendship.getFirstFriend(), friendship.getSecondFriend());
+        }
+
+        return modifiedFriendship;
     }
 
     public Friendship search(Long friendshipId) throws RepoException, ServiceException {

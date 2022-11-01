@@ -40,28 +40,10 @@ public class UI {
         System.out.println("[4] - search user after id");
         System.out.println("[5] - get the number of existing users");
         System.out.println("[6] - get all existing users");
-        System.out.println("[7] - add 10 users in the social network");
+        System.out.println("[7] - get all friends of a given user");
+        System.out.println("[8] - add 10 users in the social network");
         System.out.println("*type \"menu\" to display the users menu");
         System.out.println("**type \"exit\" to exit the application");
-    }
-
-    private void addUsersDebug() {
-        try{
-            superService.addUser("John", "O'Brien", LocalDate.of(1998, 10, 15));
-            superService.addUser("William", "Day", LocalDate.of(1988, 12, 30));
-            superService.addUser("Charles", "Kelly", LocalDate.of(1996, 3, 13));
-            superService.addUser("Donald", "Castaneda", LocalDate.of(1998, 7, 4));
-            superService.addUser("Charles-Mike", "Lam", LocalDate.of(1986, 4, 15));
-            superService.addUser("Robert", "Beck", LocalDate.of(1990, 7, 23));
-            superService.addUser("O'Mikel", "Rowe", LocalDate.of(1984, 3, 20));
-            superService.addUser("Donald", "Dotson", LocalDate.of(1989, 9, 5));
-            superService.addUser("Joseph", "Tucker-Doyle", LocalDate.of(2001, 1, 22));
-            superService.addUser("Robert", "O'Gallagher", LocalDate.of(1994, 12, 6));
-
-            printSuccessMessage("[+]All 10 users added with success!");
-        } catch(ValidationException | RepoException ex) {
-            ex.printStackTrace();
-        }
     }
 
     private void addUserUI(@NotNull Scanner scanner) {
@@ -166,6 +148,51 @@ public class UI {
         }
     }
 
+    private void getFriendsOfUserUI(Scanner scanner) {
+        try {
+            System.out.print("Introduce the id of the user: ");
+            Long userId = Long.parseLong(scanner.nextLine());
+
+            List<User> friendsOfUser = superService.getFriendsOfUser(userId);
+            if(friendsOfUser.size() == 0) {
+                printSuccessMessage("User \"" + superService.searchUser(userId).toString() + "\" has no friends!");
+            }
+            else if(friendsOfUser.size() == 1) {
+                printSuccessMessage("The only friend of user \"" + superService.searchUser(userId).toString() + "\" is:");
+            }
+            else {
+                printSuccessMessage("Friends of user \"" + superService.searchUser(userId).toString() + "\" are:");
+            }
+
+            for(User friend : friendsOfUser) {
+                printSuccessMessage(friend.toString());
+            }
+        } catch(RepoException | ServiceException ex) {
+            printException(ex.getMessage());
+        } catch(NumberFormatException ex) {
+            printException("[!]Invalid id (id must be a non negative number)!\n");
+        }
+    }
+
+    private void addUsersDebug() {
+        try{
+            superService.addUser("John", "O'Brien", LocalDate.of(1998, 10, 15));
+            superService.addUser("William", "Day", LocalDate.of(1988, 12, 30));
+            superService.addUser("Charles", "Kelly", LocalDate.of(1996, 3, 13));
+            superService.addUser("Donald", "Castaneda", LocalDate.of(1998, 7, 4));
+            superService.addUser("Charles-Mike", "Lam", LocalDate.of(1986, 4, 15));
+            superService.addUser("Robert", "Beck", LocalDate.of(1990, 7, 23));
+            superService.addUser("O'Mikel", "Rowe", LocalDate.of(1984, 3, 20));
+            superService.addUser("Mike-Abraham", "Dotson", LocalDate.of(1989, 9, 5));
+            superService.addUser("Joseph", "Tucker-Doyle", LocalDate.of(2001, 1, 22));
+            superService.addUser("Robert", "O'Gallagher", LocalDate.of(1994, 12, 6));
+
+            printSuccessMessage("[+]All 10 users added with success!");
+        } catch(ValidationException | RepoException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private void runUsersMenu() {
         System.out.println();
         printUsersMenu();
@@ -198,6 +225,9 @@ public class UI {
                     getAllUsersUI();
                     break;
                 case "7":
+                    getFriendsOfUserUI(scanner);
+                    break;
+                case "8":
                     addUsersDebug();
                     break;
                 case "menu":
