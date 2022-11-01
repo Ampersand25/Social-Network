@@ -9,7 +9,7 @@ import business.SuperService;
 import utils.ConsoleColors;
 import utils.Constants;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -351,7 +351,7 @@ public class UI {
 
     void getAllCommunitiesUI() {
         try {
-            ArrayList<ArrayList<Long>> communities = superService.getAllCommunities();
+            List<List<Long>> communities = superService.getAllCommunities();
 
             int numberOfCommunities = communities.size();
             if(numberOfCommunities == 1) {

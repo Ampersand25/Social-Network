@@ -12,7 +12,6 @@ import presentation.UI;
 
 public class Main {
     public static void main(String[] args) {
-        // TODO: change from ArrayList to List
         // TODO: add list of friends to each user
         // TODO: add date when user was created
         // TODO: replace for instructions with streams operations

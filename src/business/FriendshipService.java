@@ -10,7 +10,7 @@ import validation.IValidator;
 import infrastructure.IRepository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 public class FriendshipService {
     private final IValidator<Friendship> validator;
@@ -140,7 +140,7 @@ public class FriendshipService {
         return graph.numberOfCommunities();
     }
 
-    public ArrayList<ArrayList<Long>> getAllCommunities() throws RepoException {
+    public List<List<Long>> getAllCommunities() throws RepoException {
         SocialNetworkGraph graph = new SocialNetworkGraph(userRepo.getAll(), friendshipRepo.getAll());
         return graph.getAllCommunities();
     }

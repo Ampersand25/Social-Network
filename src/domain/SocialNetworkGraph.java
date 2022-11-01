@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -23,17 +24,17 @@ public class SocialNetworkGraph {
         return maxId;
     }
 
-    private void setAdjacentMatrix(boolean value) {
+    private void resetAdjacentMatrix() {
         for(int i = 0; i < size; ++i) {
             for(int j = i; j < size; ++j) {
-                adjacentMatrix[i][j] = adjacentMatrix[j][i] = value;
+                adjacentMatrix[i][j] = adjacentMatrix[j][i] = false;
             }
         }
     }
 
     private void computeAdjacentMatrix(@NotNull Iterable<Friendship> friendships) {
         adjacentMatrix = new boolean[size][size];
-        setAdjacentMatrix(false);
+        resetAdjacentMatrix();
 
         for(Friendship friendship : friendships) {
             int x = friendship.getFirstFriend().getId().intValue();
@@ -81,8 +82,8 @@ public class SocialNetworkGraph {
         return dfs();
     }
 
-    private @NotNull ArrayList<Long> bfsVisit(int src) {
-        ArrayList<Long> community = new ArrayList<>();
+    private @NotNull List<Long> bfsVisit(int src) {
+        List<Long> community = new ArrayList<>();
 
         LinkedList<Long> queue = new LinkedList<Long>();
 
@@ -104,8 +105,8 @@ public class SocialNetworkGraph {
         return community;
     }
 
-    private @NotNull ArrayList<ArrayList<Long>> bfs() {
-        ArrayList<ArrayList<Long>> communities = new ArrayList<>();
+    private @NotNull List<List<Long>> bfs() {
+        List<List<Long>> communities = new ArrayList<>();
 
         visitedNodes = new boolean[size];
         initVisitedNodes();
@@ -119,7 +120,7 @@ public class SocialNetworkGraph {
         return communities;
     }
 
-    public ArrayList<ArrayList<Long>> getAllCommunities() {
+    public List<List<Long>> getAllCommunities() {
         return bfs();
     }
 }
