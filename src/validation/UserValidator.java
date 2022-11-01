@@ -5,32 +5,44 @@ import exception.ValidationException;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Arrays;
 
 public class UserValidator implements IValidator<User> {
-    private boolean validName(@NotNull String name) {
+    private int validName(@NotNull String name) {
         int nameLength = name.length();
-        if(nameLength == 0) {
-            return false;
+        if(nameLength < 1) {
+            return 1;
+        }
+        if(nameLength > 100) {
+            return 2;
         }
 
         char firstCharacterName = name.charAt(0);
         if(!Character.isDigit(firstCharacterName) && !Character.isUpperCase(firstCharacterName)) {
-            return false;
+            return 3;
         }
 
+        List<Character> validSpecialCharacters = Arrays.asList('\'', '-', ' ');
         for(int index = 1; index < nameLength - 1; ++index) {
             char currentCharacter = name.charAt(index);
-            if(!Character.isLetterOrDigit(currentCharacter) && currentCharacter != '\'' && currentCharacter != '-') {
-                return false;
+            if(!Character.isLetterOrDigit(currentCharacter) && !validSpecialCharacters.contains(currentCharacter)) {
+                return 4;
+            }
+            else if(validSpecialCharacters.contains(currentCharacter)) {
+                char previousCharacter = name.charAt(index - 1);
+                if(validSpecialCharacters.contains(previousCharacter)) {
+                    return 5;
+                }
             }
         }
 
         char lastCharacterName = name.charAt(nameLength - 1);
         if(!Character.isLetterOrDigit(lastCharacterName)) {
-            return false;
+            return 6;
         }
 
-        return true;
+        return 0;
     }
 
     @Override
@@ -49,16 +61,32 @@ public class UserValidator implements IValidator<User> {
         if(userFirstName == null) {
             err += "[!]Invalid first name (first name must not be null)!\n";
         }
-        else if(!validName(userFirstName)) {
-            err += "[!]Invalid first name!\n";
+        else {
+            err += switch(validName(userFirstName)) {
+                case 1 -> "[!]Invalid first name (first name is too short)!\n";
+                case 2 -> "[!]Invalid first name (first name is too long)!\n";
+                case 3 -> "[!]Invalid first name (first name must start with capital letter or digit)!\n";
+                case 4 -> "[!]Invalid first name (first name contains invalid characters)!\n";
+                case 5 -> "[!]Invalid first name (first name contains too many consecutive special characters)!\n";
+                case 6 -> "[!]Invalid first name (first name must end with letter or digit)!\n";
+                default -> "";
+            };
         }
 
         String userLastName = user.getLastName();
         if(userLastName == null) {
             err += "[!]Invalid last name (last name must not be null)!\n";
         }
-        else if(!validName(userLastName)) {
-            err += "[!]Invalid last name!\n";
+        else {
+            err += switch(validName(userLastName)) {
+                case 1 -> "[!]Invalid last name (last name is too short)!\n";
+                case 2 -> "[!]Invalid last name (last name is too long)!\n";
+                case 3 -> "[!]Invalid last name (last name must start with capital letter or digit)!\n";
+                case 4 -> "[!]Invalid last name (last name contains invalid characters)!\n";
+                case 5 -> "[!]Invalid last name (last name contains too many consecutive special characters)!\n";
+                case 6 -> "[!]Invalid last name (last name must end with letter or digit)!\n";
+                default -> "";
+            };
         }
 
         LocalDate userBirthday = user.getBirthday();
