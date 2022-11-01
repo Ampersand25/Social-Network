@@ -12,6 +12,14 @@ import presentation.UI;
 
 public class Main {
     public static void main(String[] args) {
+        // TODO: change from ArrayList to List
+        // TODO: add list of friends to each user
+        // TODO: add date when user was created
+        // TODO: replace for instructions with streams operations
+        // TODO: write documentation
+        // TODO: create test functions
+        // TODO: update user validation
+
         IValidator<User> userValidator = new UserValidator();
         IRepository<Long, User> userRepo = new InMemoryRepo<>();
         UserService userService = new UserService(userValidator, userRepo);
