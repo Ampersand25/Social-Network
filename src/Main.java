@@ -1,5 +1,6 @@
 import domain.User;
 import domain.Friendship;
+import test.ApplicationTester;
 import validation.IValidator;
 import validation.UserValidator;
 import validation.FriendshipValidator;
@@ -14,6 +15,9 @@ public class Main {
     public static void main(String[] args) {
         // TODO: write documentation
         // TODO: create test functions
+
+        ApplicationTester applicationTester = new ApplicationTester();
+        applicationTester.runAllTests();
 
         IValidator<User> userValidator = new UserValidator();
         IRepository<Long, User> userRepo = new InMemoryRepo<>();
