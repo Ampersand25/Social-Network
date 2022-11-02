@@ -33,8 +33,8 @@ public class UserService {
         this.availableId = 0L;
     }
 
-    public void add(String firstName, String lastName, LocalDate birthday) throws ValidationException, RepoException {
-        User user = new User(firstName, lastName, birthday);
+    public void add(String firstName, String lastName, LocalDate birthday, String email) throws ValidationException, RepoException {
+        User user = new User(firstName, lastName, birthday, email);
         user.setId(availableId++);
 
         try{
@@ -63,14 +63,16 @@ public class UserService {
 
     public User modify(Long userId, String firstName, String lastName) throws ValidationException, RepoException {
         LocalDate birthday = LocalDate.now();
+        String email = "";
         List<User> friendList = new ArrayList<>();
         try {
             User searchedUser = search(userId);
             birthday = searchedUser.getBirthday();
+            email = searchedUser.getEmail();
             friendList = searchedUser.getFriendList();
         } catch (ServiceException ignored) {}
 
-        User newUser = new User(userId, firstName, lastName, birthday);
+        User newUser = new User(userId, firstName, lastName, birthday, email);
         newUser.setFriendList(friendList);
         validator.validate(newUser);
 

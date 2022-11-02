@@ -18,8 +18,8 @@ public class SuperService {
         this.friendshipService = friendshipService;
     }
 
-    public void addUser(String firstName, String lastName, LocalDate birthday) throws ValidationException, RepoException {
-        userService.add(firstName, lastName, birthday);
+    public void addUser(String firstName, String lastName, LocalDate birthday, String email) throws ValidationException, RepoException {
+        userService.add(firstName, lastName, birthday, email);
     }
 
     public User removeUser(Long userId) throws RepoException, ServiceException {

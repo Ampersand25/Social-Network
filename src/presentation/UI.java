@@ -58,7 +58,10 @@ public class UI {
             System.out.print("Introduce the birthday of the new user: ");
             LocalDate birthday = LocalDate.parse(scanner.nextLine(), Constants.DATE_TIME_FORMATTER);
 
-            superService.addUser(firstName, lastName, birthday);
+            System.out.print("Introduce email address of the new user: ");
+            String email = scanner.nextLine();
+
+            superService.addUser(firstName, lastName, birthday, email);
             printSuccessMessage("[+]User added with success!");
         } catch (ValidationException | RepoException ex) {
             printException(ex.getMessage());
@@ -172,16 +175,16 @@ public class UI {
 
     private void addUsersDebug() {
         try{
-            superService.addUser("John", "O'Brien", LocalDate.of(1998, 10, 15));
-            superService.addUser("William", "Day", LocalDate.of(1988, 12, 30));
-            superService.addUser("Charles", "Kelly", LocalDate.of(1996, 3, 13));
-            superService.addUser("Donald", "Castaneda", LocalDate.of(1998, 7, 4));
-            superService.addUser("Charles-Mike", "Lam", LocalDate.of(1986, 4, 15));
-            superService.addUser("Robert", "Beck", LocalDate.of(1990, 7, 23));
-            superService.addUser("O'Mikel", "Rowe", LocalDate.of(1984, 3, 20));
-            superService.addUser("Mike-Abraham", "Dotson", LocalDate.of(1989, 9, 5));
-            superService.addUser("Joseph", "Tucker-Doyle", LocalDate.of(2001, 1, 22));
-            superService.addUser("Robert", "O'Gallagher", LocalDate.of(1994, 12, 6));
+            superService.addUser("Ben John"       , "O'Brien"     , LocalDate.of(1998, 10, 15), "ben_john98@ezybarber.com");
+            superService.addUser("William"        , "Day"         , LocalDate.of(1988, 12, 30), "will_day88@gmail.com");
+            superService.addUser("Charles Richard", "Kelly"       , LocalDate.of(1996, 3 , 13), "charlie_kelly96@yahoo.com");
+            superService.addUser("Donald"         , "Castaneda"   , LocalDate.of(1998, 7 , 4) , "donald_castaneda98@domain.com");
+            superService.addUser("Charles-Mike"   , "Lam"         , LocalDate.of(1986, 4 , 15), "charles_lam86@manghinsu.com");
+            superService.addUser("Robert"         , "Beck"        , LocalDate.of(1990, 7 , 23), "bert_beck90@otpku.com");
+            superService.addUser("O'Mikel"        , "Rowe"        , LocalDate.of(1984, 3 , 20), "rowe84@thekangsua.com");
+            superService.addUser("Mike-Abraham"   , "Dotson"      , LocalDate.of(1989, 9 , 5) , "mike_dotson89@bomukic.com");
+            superService.addUser("Joseph Michael" , "Tucker-Doyle", LocalDate.of(2001, 1 , 22), "joseph_mike01@avmap.com");
+            superService.addUser("Robert"         , "O'Gallagher" , LocalDate.of(1994, 12, 6) , "robertino94@gmailni.com");
 
             printSuccessMessage("[+]All 10 users added with success!");
         } catch(ValidationException | RepoException ex) {

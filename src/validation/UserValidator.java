@@ -2,11 +2,12 @@ package validation;
 
 import domain.User;
 import exception.ValidationException;
+import utils.Constants;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class UserValidator implements IValidator<User> {
     private int validName(@NotNull String name) {
@@ -23,15 +24,14 @@ public class UserValidator implements IValidator<User> {
             return 3;
         }
 
-        List<Character> validSpecialCharacters = Arrays.asList('\'', '-', ' ');
         for(int index = 1; index < nameLength - 1; ++index) {
             char currentCharacter = name.charAt(index);
-            if(!Character.isLetterOrDigit(currentCharacter) && !validSpecialCharacters.contains(currentCharacter)) {
+            if(!Character.isLetterOrDigit(currentCharacter) && !Constants.VALID_NAME_SPECIAL_CHARACTERS.contains(currentCharacter)) {
                 return 4;
             }
-            else if(validSpecialCharacters.contains(currentCharacter)) {
+            else if(Constants.VALID_NAME_SPECIAL_CHARACTERS.contains(currentCharacter)) {
                 char previousCharacter = name.charAt(index - 1);
-                if(validSpecialCharacters.contains(previousCharacter)) {
+                if(Constants.VALID_NAME_SPECIAL_CHARACTERS.contains(previousCharacter)) {
                     return 5;
                 }
             }
@@ -43,6 +43,12 @@ public class UserValidator implements IValidator<User> {
         }
 
         return 0;
+    }
+
+    private boolean patternMatches(String emailAddress, String regexPattern) {
+        return Pattern.compile(regexPattern)
+                .matcher(emailAddress)
+                .matches();
     }
 
     @Override
@@ -101,6 +107,10 @@ public class UserValidator implements IValidator<User> {
         }
         else if(userBirthday.isBefore(LocalDate.now().minusYears(120))) {
             err += "[!]Invalid birthday (user must not be older than 120 years old)!\n";
+        }
+
+        if(!patternMatches(user.getEmail(), Constants.VALID_EMAIL_REGEX)) {
+            err += "[!]Invalid email address!\n";
         }
 
         if(err.length() != 0) {

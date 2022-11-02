@@ -9,20 +9,24 @@ public class User extends Entity<Long> {
     private String firstName;
     private String lastName;
     private final LocalDate birthday;
+    private final String email;
     private List<User> friendList;
 
-    public User(String firstName, String lastName, LocalDate birthday) {
+    public User(String firstName, String lastName, LocalDate birthday, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
+        this.email = email;
         friendList = new ArrayList<>();
     }
 
-    public User(Long id, String firstName, String lastName, LocalDate birthday) {
+    public User(Long id, String firstName, String lastName, LocalDate birthday, String email) {
         super(id);
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
+        this.email = email;
+        friendList = new ArrayList<>();
     }
 
     public String getFirstName() {
@@ -45,6 +49,10 @@ public class User extends Entity<Long> {
         return birthday;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public List<User> getFriendList() {
         return friendList;
     }
@@ -55,7 +63,7 @@ public class User extends Entity<Long> {
 
     @Override
     public String toString() {
-        return "id=" + super.getId() + "|first name=" + getFirstName() + "|last name=" + getLastName() + "|birthday=" + getBirthday();
+        return "id=" + super.getId() + "|first name=" + getFirstName() + "|last name=" + getLastName() + "|birthday=" + getBirthday() + "|email=" + getEmail();
     }
 
     @Override
