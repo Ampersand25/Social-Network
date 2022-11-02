@@ -6,6 +6,12 @@ import exception.ValidationException;
 import java.time.LocalDate;
 
 public class FriendshipValidator implements IValidator<Friendship> {
+    /**
+     * Metoda publica de tip void (nu intoarce niciun rezultat) care valideaza o prietenie (un obiect de tipul Friendship)
+     * Se vor valida toate campurile obiectului dat: id, firstFriend, secondFriend si date
+     * @param friendship - obiect de clasa Friendship (instanta a clasei Friendship) pe care dorim sa o validam
+     * @throws ValidationException - daca obiectul/entitatea friendship nu este valida (contine campuri/atribute/componente invalide)
+     */
     @Override
     public void validate(Friendship friendship) throws ValidationException {
         String err = new String("");
