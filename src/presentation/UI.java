@@ -58,7 +58,7 @@ public class UI {
             System.out.print("Introduce the birthday of the new user: ");
             LocalDate birthday = LocalDate.parse(scanner.nextLine(), Constants.DATE_TIME_FORMATTER);
 
-            System.out.print("Introduce email address of the new user: ");
+            System.out.print("Introduce email adress of the new user: ");
             String email = scanner.nextLine();
 
             superService.addUser(firstName, lastName, birthday, email);

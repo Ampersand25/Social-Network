@@ -45,9 +45,9 @@ public class UserValidator implements IValidator<User> {
         return 0;
     }
 
-    private boolean patternMatches(String emailAddress, String regexPattern) {
+    private boolean patternMatches(String emailAdress, String regexPattern) {
         return Pattern.compile(regexPattern)
-                .matcher(emailAddress)
+                .matcher(emailAdress)
                 .matches();
     }
 
@@ -110,7 +110,7 @@ public class UserValidator implements IValidator<User> {
         }
 
         if(!patternMatches(user.getEmail(), Constants.VALID_EMAIL_REGEX)) {
-            err += "[!]Invalid email address!\n";
+            err += "[!]Invalid email adress!\n";
         }
 
         if(err.length() != 0) {
