@@ -63,7 +63,7 @@ public class UI {
 
             superService.addUser(firstName, lastName, birthday, email);
             printSuccessMessage("[+]User added with success!");
-        } catch (ValidationException | RepoException ex) {
+        } catch (ValidationException | RepoException | IllegalArgumentException ex) {
             printException(ex.getMessage());
         } catch(DateTimeParseException ex) {
             printException("[!]Invalid date (the format of the date must be \"yyyy-MM-dd\")!\n");
@@ -187,7 +187,7 @@ public class UI {
             superService.addUser("Robert"         , "O'Gallagher" , LocalDate.of(1994, 12, 6) , "robertino94@gmailni.com");
 
             printSuccessMessage("[+]All 10 users added with success!");
-        } catch(ValidationException | RepoException ex) {
+        } catch(ValidationException | RepoException | IllegalArgumentException ex) {
             ex.printStackTrace();
         }
     }

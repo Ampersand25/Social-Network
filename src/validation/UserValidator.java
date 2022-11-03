@@ -11,16 +11,16 @@ import java.util.regex.Pattern;
 
 public class UserValidator implements IValidator<User> {
     /**
-     * Metoda privata de tip int (returneaza/intoarce un intreg (integer) cu semn (signed) pe 4 bytes/octeti (32 de biti)) care verifica daca un string dat ca si parametru reprezinta un nume valid (poate sa fie numele sau prenumele unei persoane)
-     * Valoarea numerica intreaga returnata de catre functie reprezinta codul de eroare (0 daca string-ul este valid si o valoare nenula (diferita de 0) daca string-ul nu este valid)
-     * @param name - string-ul pe care vrem sa il validam (sa verificam daca reprezinta un nume valid)
-     * @return 0 - string-ul name este valid
-     *         1 - string-ul name are lungime prea mica (contine 0 caractere)
-     *         2 - string-ul name are lungime prea mare (contine cel putin 100 de caractere)
-     *         3 - string-ul name incepe cu un caracter invalid (primul caracter nu este litera mare sau cifra)
-     *         4 - string-ul name contine un caracter invalid (care nu este nici litera, nici cifra si nici unul dintre caracterele speciale care sunt permise in componenta unor nume: apostrof, linie orizontala sau spatiu)
-     *         5 - string-ul name contine doua caractere speciale consecutive (prin urmare numele nu este valid)
-     *         6 - string-ul name se termina cu un caracter invalid (ultimul caracter nu este litera sau cifra)
+     * Metoda privata de tip int (returneaza/intoarce un intreg (integer) cu semn (signed) pe 4 bytes/octeti (32 de biti)) care verifica daca un string dat ca si parametru reprezinta un nume valid (poate sa fie numele sau prenumele unei persoane din lumea reala)<br>
+     * Valoarea numerica intreaga returnata de catre functie reprezinta codul de eroare (0 daca string-ul este valid si o valoare nenula (diferita de 0) daca string-ul nu este valid (nu poate reprezenta un nume real))
+     * @param name obiect de clasa String (sir de caractere) reprezentand string-ul pe care vrem sa il validam (sa verificam daca reprezinta un nume valid)
+     * @return <b>0</b> - string-ul name este valid<br>
+     *         <b>1</b> - string-ul name are lungime prea mica (contine 0 caractere)<br>
+     *         <b>2</b> - string-ul name are lungime prea mare (contine cel putin 100 de caractere)<br>
+     *         <b>3</b> - string-ul name incepe cu un caracter invalid (primul caracter nu este litera mare sau cifra)<br>
+     *         <b>4</b> - string-ul name contine un caracter invalid (care nu este nici litera, nici cifra si nici unul dintre caracterele speciale care sunt permise in componenta unor nume: apostrof, linie orizontala sau spatiu)<br>
+     *         <b>5</b> - string-ul name contine doua caractere speciale consecutive (prin urmare numele nu este valid)<br>
+     *         <b>6</b> - string-ul name se termina cu un caracter invalid (ultimul caracter nu este litera sau cifra)
      */
     private int validName(@NotNull String name) {
         int nameLength = name.length();
@@ -59,10 +59,10 @@ public class UserValidator implements IValidator<User> {
 
     /**
      * Metoda privata de tip boolean (returneaza/intoarce o valoare de tip bool/boolean, adica false sau true) care verifica daca un string reprezinta o adresa de email valida (se potriveste cu un sablon (o macheta) care indica formatul unei adrese de email valide)
-     * @param emailAdress - string care reprezinta adresa de email pe care dorim sa o validam
-     * @param regexPattern - string care reprezinta o expresie regulara (expresie ce reprezinta un sablon pentru o adresa de email valida)
-     * @return false - string-ul emailAdress nu reprezinta o adresa de email valida
-     *         true  - string-ul emailAdress reprezinta o adresa de email valida
+     * @param emailAdress instanta a clasei String care reprezinta adresa de email pe care dorim sa o validam (verificam daca poate sa reprezinte o adresa de email valida)
+     * @param regexPattern instanta a clasei String care reprezinta o expresie regulara (expresie ce reprezinta un sablon pentru o adresa de email valida)
+     * @return <b>false</b> - string-ul (obiectul de clasa String) emailAdress nu reprezinta o adresa de email valida<br>
+     *         <b>true</b>  - string-ul (obiectul de clasa String) emailAdress reprezinta o adresa de email valida
      */
     private boolean patternMatches(String emailAdress, String regexPattern) {
         return Pattern.compile(regexPattern)
@@ -71,12 +71,12 @@ public class UserValidator implements IValidator<User> {
     }
 
     /**
-     * Metoda publica de tip void (functie procedurala care nu returneaza/intoarce nimic) pentru validarea unui utilizator (obiect de clasa User)
-     * Metoda valideaza componentele (datele membru) ale unui obiect de tipul User dat ca si parametru metodei
-     * Datele membru care sunt validate sunt: id, firstName, lastName, birthday si email
-     * Datele membru care nu sunt validate sunt: friendList (lista de prieteni a unui utilizator)
-     * @param user - obiect de clasa/tipul User (instanta a clasei User) ce reprezinta un posibil utilizator din reteaua de socializare
-     * @throws ValidationException - exceptie aruncata daca obiectul user contine cel putin un atribut/camp invalid
+     * Metoda publica de tip void (functie procedurala care nu returneaza/intoarce nimic) pentru validarea unui utilizator (obiect de clasa User)<br>
+     * Metoda valideaza componentele (datele membru) ale unui obiect de tipul User dat ca si parametru de intrare pentru metoda<br>
+     * Datele membru (campurile/atributele) care sunt validate sunt: id (identificator unic), firstName (prenumele), lastName (numele de familie), birthday (data nasterii) si email (adresa de email)<br>
+     * Datele membru (campurile/atributele) care nu sunt validate sunt: friendList (lista de prieteni a unui utilizator)
+     * @param user obiect de clasa/tipul User (instanta a clasei User) ce reprezinta un posibil utilizator din reteaua de socializare
+     * @throws ValidationException daca obiectul user contine cel putin un atribut/camp invalid (prin urmare nu reprezinta un utilizator valid pentru reteaua de socializare)
      */
     @Override
     public void validate(@NotNull User user) throws ValidationException {

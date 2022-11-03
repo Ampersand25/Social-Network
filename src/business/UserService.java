@@ -17,6 +17,11 @@ public class UserService {
     private final IRepository<Long, User> repo;
     private Long availableId;
 
+    /**
+     * Metoda privata de tip void (procedura) care valideaza un obiect de clasa Long (verifica daca acesta este un identificator valid pentru un utilizator (obiect de clasa User))
+     * @param id obiect de clasa Long pe care vrem sa il validam
+     * @throws ServiceException daca parametrul formal/simbolic de intrare id este null (are valoare nula) sau daca este o valoare intreaga negativa (este mai mic strict decat 0)
+     */
     private void validateId(Long id) throws ServiceException {
         if(id == null) {
             throw new ServiceException("[!]Invalid id (id must not be null)!\n");
@@ -27,13 +32,18 @@ public class UserService {
         }
     }
 
+    /**
+     * Constructor public al unui obiect de clasa UserService care primeste doi parametri de intrare: validator si repo
+     * @param validator obiect de clasa IValidator (interfata de tip template care are User ca si parametru) folosit pentru validarea utilizatorilor (obiectelor de clasa User)
+     * @param repo obiect de clasa IRepository (interfata de tip IRepository care are Long si User ca si parametri) folosit pentru stocarea utilizatorilor (obiectelor de clasa User) in memorie (repozitoriu)
+     */
     public UserService(IValidator<User> validator, IRepository<Long, User> repo) {
         this.validator = validator;
         this.repo = repo;
         this.availableId = 0L;
     }
 
-    public void add(String firstName, String lastName, LocalDate birthday, String email) throws ValidationException, RepoException {
+    public void add(String firstName, String lastName, LocalDate birthday, String email) throws ValidationException, RepoException, IllegalArgumentException {
         User user = new User(firstName, lastName, birthday, email);
         user.setId(availableId++);
 
@@ -47,7 +57,7 @@ public class UserService {
         repo.add(user);
     }
 
-    public User remove(Long userId) throws RepoException, ServiceException {
+    public User remove(Long userId) throws RepoException, ServiceException, IllegalArgumentException {
         validateId(userId);
 
         User removedUser = repo.remove(userId);
@@ -61,7 +71,7 @@ public class UserService {
         return removedUser;
     }
 
-    public User modify(Long userId, String firstName, String lastName) throws ValidationException, RepoException {
+    public User modify(Long userId, String firstName, String lastName) throws ValidationException, RepoException, IllegalArgumentException {
         LocalDate birthday = LocalDate.now();
         String email = "";
         List<User> friendList = new ArrayList<>();
@@ -92,7 +102,7 @@ public class UserService {
         return modifiedUser;
     }
 
-    public User search(Long userId) throws RepoException, ServiceException {
+    public User search(Long userId) throws RepoException, ServiceException, IllegalArgumentException {
         validateId(userId);
         return repo.search(userId);
     }
@@ -105,7 +115,7 @@ public class UserService {
         return repo.getAll();
     }
 
-    public List<User> getFriendsOfUser(Long userId) throws RepoException, ServiceException {
+    public List<User> getFriendsOfUser(Long userId) throws RepoException, ServiceException, IllegalArgumentException {
         validateId(userId);
         return repo.search(userId).getFriendList();
     }

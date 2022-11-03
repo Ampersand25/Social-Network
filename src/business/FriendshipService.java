@@ -18,6 +18,14 @@ public class FriendshipService {
     private final IRepository<Long, User> userRepo;
     private Long availableId;
 
+    /**
+     * Metoda privata de tip void (functie procedurala) care adauga bidirectional (in ambele sensuri) un user/utilizator (obiect de clasa User) in lista de prieteni ai unui alt user/utilizator (obiect de clasa User)<br>
+     * Metoda face doua adaugari ci anume:<br>
+     * - adauga utilizatorul (obiect de clasa User) secondFriend in lista de prieteni (atributul/campul privat friendList ce reprezinta o lista de obiecte de tipul User) ai utilizatorului (obiect de clasa User) firstFriend<br>
+     * - adauga utilizatorul (obiect de clasa User) firstFriend in lista de prieteni (atributul/campul privat friendList ce reprezinta o lista de obiecte de tipul User) ai utilizatorului (obiect de clasa User) secondFriend
+     * @param firstUser obiect de clasa User (utilizator valid din reteaua de socializare) reprezentand primul prieten din relatia de prietenie
+     * @param secondUser obiect de clasa User (utilizator valid din reteaua de socializare) reprezentand al doilea prieten din relatia de prietenie
+     */
     private void addFriendToUser(User firstUser, User secondUser) {
         List<User> firstUserFriendList = firstUser.getFriendList();
         firstUserFriendList.add(secondUser);
@@ -28,6 +36,14 @@ public class FriendshipService {
         secondUser.setFriendList(secondUserFriendList);
     }
 
+    /**
+     * Metoda privata de tip void (functie procedurala) care sterge bidirectional (in ambele sensuri) un user/utilizator (obiect de clasa User) din lista de prieteni ai unui alt user/utilizator (obiect de clasa User)<br>
+     * Metoda face doua stergeri/eliminari ci anume:<br>
+     * - sterge/elimina utilizatorul (obiect de clasa User) secondFriend din lista de prieteni (atributul/campul privat friendList ce reprezinta o lista de obiecte de tipul User) ai utilizatorului (obiect de clasa User) firstFriend<br>
+     * - sterge/elimina utilizatorul (obiect de clasa User) firstFriend din lista de prieteni (atributul/campul privat friendList ce reprezinta o lista de obiecte de tipul User) ai utilizatorului (obiect de clasa User) secondFriend
+     * @param firstUser obiect de clasa User (utilizator valid din reteaua de socializare) reprezentand primul prieten din relatia de prietenie
+     * @param secondUser obiect de clasa User (utilizator valid din reteaua de socializare) reprezentand al doilea prieten din relatia de prietenie
+     */
     private void deleteFriendFromUser(User firstUser, User secondUser) {
         List<User> firstUserFriendList = firstUser.getFriendList();
         List<User> filteredFirstUserFriendList = firstUserFriendList.stream().filter(user -> !user.equals(secondUser)).toList();
@@ -38,6 +54,11 @@ public class FriendshipService {
         secondUser.setFriendList(filteredSecondUserFriendList);
     }
 
+    /**
+     * Metoda privata de tip void (procedura) folosita pentru validarea id-ului (identificator unic intreg) unei posibile relatii de prietenie (obiect de clasa Friendship) din reteaua de socializare
+     * @param id obiect de clasa Long reprezentand identificatorul pe care dorim sa il validam
+     * @throws ServiceException daca parametrul formal/simbolic de intrare id nu poate sa fie id-ul unei prietenii din relatia de prietenie (este fie null, fie reprezinta o valoare numerica intreaga negativa (este mai mic strict decat 0))
+     */
     private void validateId(Long id) throws ServiceException {
         if(id == null) {
             throw new ServiceException("[!]Invalid id (id must not be null)!\n");
@@ -48,6 +69,12 @@ public class FriendshipService {
         }
     }
 
+    /**
+     * Constructorul public al unui obiect de clasa FriendshipService care primeste trei parametri de intrare (parametri formali/simbolici): validator, repo si userRepo
+     * @param validator obiect de clasa IValidator (interfaca de tip template care are Friendship ca si parametru) folosit pentru validarea relatiilor de prietenie (obiectelor de clasa Friendship)
+     * @param repo obiect de clasa IRepository (interfata de tip template care are Long si Friendship ca si parametri) folosit pentru stocarea relatiilor de prietenie (obiectelor de clasa Friendship) in memorie (repozitoriu)
+     * @param userRepo obiect de clasa IRepository (interfata de tip template care are Long si User ca si parametri) folosit pentru stocarea utilizatorilor (obiectelor de clasa User) in memorie (repozitoriu)
+     */
     public FriendshipService(IValidator<Friendship> validator, IRepository<Long, Friendship> repo, IRepository<Long, User> userRepo) {
         this.validator = validator;
         this.friendshipRepo = repo;
@@ -55,7 +82,7 @@ public class FriendshipService {
         this.availableId = 0L;
     }
 
-    public void add(Long firstFriendId, Long secondFriendId) throws ValidationException, RepoException, ServiceException {
+    public void add(Long firstFriendId, Long secondFriendId) throws ValidationException, RepoException, ServiceException, IllegalArgumentException {
         if(userRepo.len() == 0) {
             throw new ServiceException("[!]There are no users in the social network!\n");
         }
@@ -90,7 +117,7 @@ public class FriendshipService {
         addFriendToUser(firstFriend, secondFriend);
     }
 
-    public Friendship remove(Long friendshipId) throws RepoException, ServiceException {
+    public Friendship remove(Long friendshipId) throws RepoException, ServiceException, IllegalArgumentException {
         validateId(friendshipId);
 
         Friendship removedFriendship = friendshipRepo.remove(friendshipId);
@@ -99,7 +126,7 @@ public class FriendshipService {
         return removedFriendship;
     }
 
-    public Friendship modify(Long friendshipId, Long firstFriendId, Long secondFriendId) throws ValidationException, RepoException {
+    public Friendship modify(Long friendshipId, Long firstFriendId, Long secondFriendId) throws ValidationException, RepoException, IllegalArgumentException {
         User firstFriend = userRepo.search(firstFriendId);
         User secondFriend = userRepo.search(secondFriendId);
 
@@ -122,7 +149,7 @@ public class FriendshipService {
         return modifiedFriendship;
     }
 
-    public Friendship modify(Long friendshipId, Long firstFriendId, Long secondFriendId, LocalDate date) throws ValidationException, RepoException {
+    public Friendship modify(Long friendshipId, Long firstFriendId, Long secondFriendId, LocalDate date) throws ValidationException, RepoException, IllegalArgumentException {
         User firstFriend = userRepo.search(firstFriendId);
         User secondFriend = userRepo.search(secondFriendId);
 
@@ -145,7 +172,7 @@ public class FriendshipService {
         return modifiedFriendship;
     }
 
-    public Friendship search(Long friendshipId) throws RepoException, ServiceException {
+    public Friendship search(Long friendshipId) throws RepoException, ServiceException, IllegalArgumentException {
         validateId(friendshipId);
         return friendshipRepo.search(friendshipId);
     }

@@ -13,8 +13,8 @@ public class SocialNetworkGraph {
 
     /**
      * Metoda privata de tipul Long care returneaza/intoarce cel mai mare id al unui user/utilizator dintr-o lista de utilizatori (obiecte de clasa User) data ca si parametru de intrare pentru metoda
-     * @param users - obiect iterabil (lista) de obiecte de clasa User (utilizatori din reteaua de socializare)
-     * @return - o valoare numerica de tip Long reprenzentand id-ul maxim al unui utilizator din lista furnizata metodei in momentul apelului
+     * @param users obiect iterabil (lista) de obiecte de clasa User (utilizatori valizi din reteaua de socializare)
+     * @return valoare numerica de tip Long reprenzentand id-ul maxim al unui utilizator din lista furnizata metodei in momentul apelului
      */
     private Long getUserMaxId(@NotNull Iterable<User> users) {
         Long maxId = 0L;
@@ -30,7 +30,7 @@ public class SocialNetworkGraph {
     }
 
     /**
-     * Metoda privata de tip void (functie procedurala (procedura)) care reseteaza atributul privat adjacentMatrix al obiectului de clasa SocialNetworkGraph pentru care se apeleaza metoda
+     * Metoda privata de tip void (functie procedurala (procedura)) care reseteaza atributul privat adjacentMatrix al obiectului de clasa SocialNetworkGraph pentru care se apeleaza metoda<br>
      * Metoda zerorizeaza matricea adjacentMatrix (o populeaza cu valori booleene de false)
      */
     private void resetAdjacentMatrix() {
@@ -42,8 +42,11 @@ public class SocialNetworkGraph {
     }
 
     /**
-     * Metoda privata de tip void (nu returneaza/intoarce nicio valoare) care creeaza matricea de adiacenta a grafului retelei de socializare
-     * @param friendships - lista de obiecte de clasa Friendship reprezentand relatiile de prietenie din reteaua de socializare
+     * Metoda privata de tip void (nu returneaza/intoarce nicio valoare) care creeaza matricea de adiacenta a grafului retelei de socializare pentru care se apeleaza metoda<br>
+     * Metoda populeaza initial matricea de adiacenta cu valori false iar ulterior marcheaza cu valori true liniile si coloanele corespunzatoare utilizatorilor din reteaua de socializare care sunt prieteni (se regasesc in obiectul iterabil friendships)<br>
+     * Daca doi prieteni cu id-urile x si y sunt prieteni atunci adjacentMatrix[x][y] si adjacentMatrix[y][x] vor avea valoarea true<br>
+     * Daca doi prieteni cu id-urile x si y nu sunt prieteni atunci adjacentMatrix[x][y] si adjacentMatrix[y][x] vor avea valoarea false
+     * @param friendships lista de obiecte de clasa Friendship reprezentand relatiile de prietenie din reteaua de socializare
      */
     private void computeAdjacentMatrix(@NotNull Iterable<Friendship> friendships) {
         adjacentMatrix = new boolean[size][size];
@@ -58,7 +61,7 @@ public class SocialNetworkGraph {
     }
 
     /**
-     * Metoda privata de tip void (procedura) care initializeaza vectorul visitedNodes care reprezinta nodurile vizitate din graful retelei de socializare
+     * Metoda privata de tip void (procedura) care initializeaza vectorul visitedNodes care reprezinta nodurile vizitate din graful retelei de socializare<br>
      * Metoda populeazaz lista de noduri vizitate cu valoarea booleana false (marcheaza fiecare user/utilizator din cadrul retelei ca fiind nevizitat)
      */
     private void initVisitedNodes() {
@@ -66,9 +69,9 @@ public class SocialNetworkGraph {
     }
 
     /**
-     * Metoda publica de tip void care parcurge toate nodurile nevizitate accesibile din nodul src (nod sursa) si le marcheaza ca fiind vizitate in lista visitedNodes
-     * Parcurgerea are loc in adancime (DFS - Depth First Search)
-     * @param src - valoare numerica intreaga cu semn (signed) pe 4 bytes/octeti (32 de biti) reprezentand nodul din care pornim cautarea in adancime
+     * Metoda publica de tip void care parcurge toate nodurile nevizitate accesibile din nodul src (nod sursa reprezentand nodul curent din cadrul parcurgerii) si le marcheaza ca fiind vizitate in lista visitedNodes<br>
+     * Parcurgerea se realizeaza in adancime (DFS - Depth First Search)
+     * @param src valoare numerica intreaga cu semn (signed) pe 4 bytes/octeti (32 de biti) reprezentand nodul curent care este parcurs (care a fost decoperit de parcurgerea in adancime)
      */
     private void dfsVisit(int src) {
         visitedNodes[src] = true;
@@ -80,9 +83,9 @@ public class SocialNetworkGraph {
     }
 
     /**
-     * Metoda privata de tip int (intoarce o valoare numerica intreaga) care returneaza numarul de comunitati dintr-o retea de socializare
+     * Metoda privata de tip int (intoarce o valoare numerica intreaga) care returneaza numarul de comunitati dintr-o retea de socializare<br>
      * Metoda apeleaza metoda privata dfsVisit pentru fiecare nod nevizitat din graful retelei (pentru fiecare componenta conexa)
-     * @return - valoare numerica intreaga cu semn (signed) pe 4 bytes/octeti (32 de biti) care este pozitiva (mai mare sau egala cu 0) si care reprezentand numarul de comunitati din reteaua de socializare (adica numarul de componente conexe din graful retelei reprezentat sub forma de matrice de adiacenta)
+     * @return valoare numerica intreaga cu semn (signed) pe 4 bytes/octeti (32 de biti) care este pozitiva (mai mare sau egala cu 0) si care reprezentand numarul de comunitati din reteaua de socializare (adica numarul de componente conexe din graful retelei reprezentat sub forma de matrice de adiacenta prin atributul privat adjacentMatrix)
      */
     private int dfs() {
         int numberOfConnectedComponents = 0;
@@ -101,9 +104,9 @@ public class SocialNetworkGraph {
     }
 
     /**
-     * Constructor public care primeste doi parametri: users si friendships
-     * @param users - lista de obiecte de clasa User reprezentand lista de useri/utilizatori din reteaua de socializare
-     * @param friendships - lista de obiecte de clasa Friendship reprezentand lista de prietenii din reteaua de socializare
+     * Constructor public care primeste doi parametri: users (lista de utilizatori valizi din reteaua de socializare) si friendships (lista de prietenii valide din reteaua de socializare)
+     * @param users lista de obiecte de clasa User reprezentand lista de useri/utilizatori din reteaua de socializare
+     * @param friendships lista de obiecte de clasa Friendship reprezentand lista de prietenii din reteaua de socializare
      */
     public SocialNetworkGraph(Iterable<User> users, Iterable<Friendship> friendships) {
         size = getUserMaxId(users).intValue() + 1;
@@ -111,19 +114,19 @@ public class SocialNetworkGraph {
     }
 
     /**
-     * Metoda publica de tip int (intoarce o valoare numerica intreaga) care returneaza numarul de comunitati dintr-o retea de socializare
+     * Metoda publica de tip int (intoarce o valoare numerica intreaga) care returneaza numarul de comunitati dintr-o retea de socializare<br>
      * Metoda apeleaza metoda privata dfs si intoarce/returneaza rezultatul acestei metode
-     * @return - valoare numerica intreaga cu semn (signed) pe 4 bytes/octeti (32 de biti) care este pozitiva (mai mare sau egala cu 0) si care reprezentand numarul de comunitati din reteaua de socializare (adica numarul de componente conexe din graful retelei reprezentat sub forma de matrice de adiacenta)
+     * @return valoare numerica intreaga cu semn (signed) pe 4 bytes/octeti (32 de biti) care este pozitiva (mai mare sau egala cu 0) si care reprezentand numarul de comunitati din reteaua de socializare (adica numarul de componente conexe din graful retelei reprezentat sub forma de matrice de adiacenta)
      */
     public int numberOfCommunities() {
         return dfs();
     }
 
     /**
-     * Metoda privata care returneaza/intoarce o lista de valori numerice de tip Long reprezentand componenta conexa din care face parte nodul src (dat ca si parametru)
+     * Metoda privata care returneaza/intoarce o lista de valori numerice de tip Long reprezentand componenta conexa din care face parte nodul/varful src (dat ca si parametru de intrare metodei)<br>
      * Metoda parcurge graful retelei folosind tehnica de cautare in latime (BFS - Breadth First Search)
-     * @param src - valoare numerica intreaga care reprezinta nodul sursa (nodul curent din parcurgerea in latime)
-     * @return - lista de obiecte de clasa Long reprezentand componenta conexa care contine nodul/varful src
+     * @param src valoare numerica intreaga care reprezinta nodul sursa (nodul curent din parcurgerea in latime)
+     * @return lista de obiecte de clasa Long (identificatori) reprezentand id-urile prietenilor (obiecte de clasa User) care reprezinta componenta conexa care contine nodul/varful src
      */
     private @NotNull List<Long> bfsVisit(int src) {
         List<Long> community = new ArrayList<>();
@@ -148,8 +151,11 @@ public class SocialNetworkGraph {
     }
 
     /**
-     * Metoda privata care parcurge un graf folosind tehnica BFS (se apeleaza metoda privata bfsVisit pentru fiecare nod/varf nevizitat din graful retelei (graf reprezentat sub forma unei metrici de adiacenta))
-     * @return - lista de liste de obiecte de clasa Long reprezentand lista tuturor comunitatilor din reteaua de socializare (adica lista tuturor componentelor conexe din graful retelei)
+     * Metoda privata care parcurge un graf folosind tehnica BFS (se apeleaza metoda privata bfsVisit pentru fiecare nod/varf nevizitat din graful retelei (graf reprezentat sub forma unei matrici de adiacenta))<br>
+     * O lista reprezinta o comunitate (adica toate id-urile utilizatorilor din comunitatea respectiva)<br>
+     * O comunitate reprezinta o componenta conexa din graful retelei<br>
+     * Lista de liste reprezinta lista tuturor comunitatilor retelei de socializare
+     * @return lista de liste de obiecte de clasa Long reprezentand lista tuturor comunitatilor din reteaua de socializare (adica lista tuturor componentelor conexe din graful retelei)
      */
     private @NotNull List<List<Long>> bfs() {
         List<List<Long>> communities = new ArrayList<>();
@@ -167,9 +173,10 @@ public class SocialNetworkGraph {
     }
 
     /**
-     * Metoda publica care returneaza lista de comunitati din graful retelei de socializare
-     * Metoda apeleaza metoda privata bfs si returneaza/intoarce rezultatul acestei metode
-     * @return - lista de liste de obiecte de clasa Long reprezentand lista tuturor comunitatilor din reteaua de socializare (adica lista tuturor componentelor conexe din graful retelei)
+     * Metoda publica care returneaza lista de comunitati din graful retelei de socializare<br>
+     * Metoda apeleaza metoda privata bfs si returneaza/intoarce rezultatul acestei metode<br>
+     * Metoda furnizeaza o lista de liste care contin id-urile prietenilor dintr-o comunitate (componenta conexa a grafului retelei)
+     * @return lista de liste de obiecte de clasa Long reprezentand lista tuturor comunitatilor din reteaua de socializare (adica lista tuturor componentelor conexe din graful retelei de socializare)
      */
     public List<List<Long>> getAllCommunities() {
         return bfs();
