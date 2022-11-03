@@ -107,83 +107,83 @@ public class SuperService {
     }
 
     /**
-     *
-     * @param firstFriendId
-     * @param secondFriendId
-     * @throws ValidationException
-     * @throws RepoException
-     * @throws ServiceException
-     * @throws IllegalArgumentException
+     * Metoda publica de tip void (functie procedurala) care adauga o relatie de prietenie (obiect de clasa Friendship) in reteaua de socializare
+     * @param firstFriendId obiect de clasa Long ce reprezinta identificatorul unic (id-ul) primului prieten
+     * @param secondFriendId obiect de clasa Long ce reprezinta identificatorul unic (id-ul) celui de al doilea prieten
+     * @throws ValidationException daca relatia de prietenie creata nu este valida (este invalida)
+     * @throws RepoException daca exista deja o relatie de prietenie intre cei doi prieteni cu id-urile firstFriendId respectiv secondFriendId
+     * @throws ServiceException daca cel putin unul dintre cele doua id-uri nu este valid (firstFriendId sau secondFriendId este invalid; cele doua id-uri trebuie sa fie diferite de null si sa fie valori numerice intreagi mai mari sau egale cu 0)
+     * @throws IllegalArgumentException daca cel putin unul dintre cele doua id-uri nu este valid (firstFriendId sau secondFriendId este invalid; cele doua id-uri trebuie sa fie diferite de null si sa fie valori numerice intreagi mai mari sau egale cu 0)
      */
     public void addFriendship(Long firstFriendId, Long secondFriendId) throws ValidationException, RepoException, ServiceException, IllegalArgumentException {
         friendshipService.add(firstFriendId, secondFriendId);
     }
 
     /**
-     *
-     * @param friendshipId
-     * @return
-     * @throws RepoException
-     * @throws ServiceException
-     * @throws IllegalArgumentException
+     * Metoda publica de tip operand/rezultat care sterge/elimina o relatie de prietenie (obiect de clasa Friendship) din reteaua de socializare
+     * @param friendshipId obiect de clasa Long ce reprezinta id-ul (identificatorul unic) prieteniei pe care dorim sa o stergem/eliminam
+     * @return obiect de clasa Friendship (prietenie valida din reteaua de socializare) ce reprezinta prietenia stearsa/eliminata
+     * @throws RepoException daca nu exista prietenii in retea sau prietenia cu id-ul egal cu friendshipId nu exista (nu exista nicio prietenie care sa aiba id-ul egal cu friendshipId)
+     * @throws ServiceException daca parametrul formal/simbolic de intrare friendshipId este null sau reprezinta o valoare numerica strict negativa (mai mica strict decat 0)
+     * @throws IllegalArgumentException daca parametrul formal/simbolic de intrare friendshipId este null sau reprezinta o valoare numerica strict negativa (mai mica strict decat 0)
      */
     public Friendship removeFriendship(Long friendshipId) throws RepoException, ServiceException, IllegalArgumentException {
         return friendshipService.remove(friendshipId);
     }
 
     /**
-     *
-     * @param friendshipId
-     * @param firstFriendId
-     * @param secondFriendId
-     * @return
-     * @throws ValidationException
-     * @throws RepoException
-     * @throws IllegalArgumentException
+     * Metoda publica de tip operand/rezultat care modifica o prietenie (obiect de clasa Friendship) existenta in retea
+     * @param friendshipId obiect de clasa Long (valoare numerica intreaga cu semn (signed)) ce reprezinta identificatorul unic al prieteniei (al obiectului de clasa Friendship)
+     * @param firstFriendId obiect ce clasa Long (valoare numerica intreaga cu semn (signed)) ce reprezinta noul prim prieten al relatiei de prietenie
+     * @param secondFriendId obiect ce clasa Long (valoare numerica intreaga cu semn (signed)) ce reprezinta noul cel de al doilea prieten al relatiei de prietenie
+     * @return obiect de clasa Friendship ce reprezinta prietenia (obiectul de clasa Friendship) modificata din retea
+     * @throws ValidationException daca noua prietenie creata nu este valida (id-ul primului prieten sau al celui de al doilea nu este valid)
+     * @throws RepoException daca nu exista prietenii in retea sau nu exista nicio relatie de prieteni care sa aiba id-ul egal cu id-ul noi relatii de prietenie (parametrul friendshipId)
+     * @throws IllegalArgumentException daca friendshipId, firstFriendId sau secondFriendId sunt invalide (sunt egale cu null sau sunt valori numerice strict negative)
      */
     public Friendship modifyFriendship(Long friendshipId, Long firstFriendId, Long secondFriendId) throws ValidationException, RepoException, IllegalArgumentException {
         return friendshipService.modify(friendshipId, firstFriendId, secondFriendId);
     }
 
     /**
-     *
-     * @param friendshipId
-     * @param firstFriendId
-     * @param secondFriendId
-     * @param date
-     * @return
-     * @throws ValidationException
-     * @throws RepoException
-     * @throws IllegalArgumentException
+     * Metoda publica de tip operand/rezultat care modifica o prietenie (obiect de clasa Friendship) existenta in retea
+     * @param friendshipId obiect de clasa Long (valoare numerica intreaga cu semn (signed)) ce reprezinta identificatorul unic al prieteniei (al obiectului de clasa Friendship)
+     * @param firstFriendId obiect ce clasa Long (valoare numerica intreaga cu semn (signed)) ce reprezinta noul prim prieten al relatiei de prietenie
+     * @param secondFriendId obiect ce clasa Long (valoare numerica intreaga cu semn (signed)) ce reprezinta noul cel de al doilea prieten al relatiei de prietenie
+     * @param date obiect de clasa LocalDate ce reprezinta noua data calendaristica (zi, luna, an) la care relatia de prietenie s-a legat intre cei doi prieteni: cel cu id-ul firstFriendId si cel cu id-ul secondFriendId
+     * @return obiect de clasa Friendship ce reprezinta prietenia (obiectul de clasa Friendship) modificata din retea
+     * @throws ValidationException daca noua prietenie creata nu este valida (id-ul primului prieten sau al celui de al doilea nu este valid)
+     * @throws RepoException daca nu exista prietenii in retea sau nu exista nicio relatie de prieteni care sa aiba id-ul egal cu id-ul noi relatii de prietenie (parametrul friendshipId)
+     * @throws IllegalArgumentException daca friendshipId, firstFriendId sau secondFriendId sunt invalide (sunt egale cu null sau sunt valori numerice strict negative)
      */
     public Friendship modifyFriendship(Long friendshipId, Long firstFriendId, Long secondFriendId, LocalDate date) throws ValidationException, RepoException, IllegalArgumentException {
         return friendshipService.modify(friendshipId, firstFriendId, secondFriendId, date);
     }
 
     /**
-     *
-     * @param friendshipId
-     * @return
-     * @throws RepoException
-     * @throws ServiceException
-     * @throws IllegalArgumentException
+     * Metoda publica de tip operand/rezultat care cauta un prieten (obiect de clasa Friendship) in reteaua de socializare
+     * @param friendshipId obiect de clasa Long ce reprezinta identificatorul unic al utilizatorului cautat
+     * @return obiect de clasa Friendship (entitatea prietenie) ce reprezinta prietenia cu id-ul egal cu friendshipId din retea
+     * @throws RepoException daca nu exista prietenii (obiecte de clasa Friendship) in retea sau daca prietenia cautata nu exista (nu exista nicio prietenie cu id-ul egal cu friendshipId)
+     * @throws ServiceException daca parametrul formal/simbolic de intrare friendshipId este invalid (este null sau este o valoare numerica intreaga mai mica strict decat 0)
+     * @throws IllegalArgumentException daca parametrul formal/simbolic de intrare friendshipId este invalid (este null sau este o valoare numerica intreaga mai mica strict decat 0)
      */
     public Friendship searchFriendship(Long friendshipId) throws RepoException, ServiceException, IllegalArgumentException {
         return friendshipService.search(friendshipId);
     }
 
     /**
-     *
-     * @return
+     * Metoda publica de tip operand/rezultat care returneaza/intoarce numarul total de prietenii din relatia de prietenie
+     * @return valoare numerica intreaga cu semn (signed) pe 4 bytes/octeti (32 de biti) ce reprezinta numarul de prietenii din retea
      */
     public int numberOfFriendships() {
         return friendshipService.len();
     }
 
     /**
-     *
-     * @return
-     * @throws RepoException
+     * Metoda publica de tip operand/rezultat care returneaza o lista cu toate prieteniile (obiecte de clasa Friendship) din reteaua de socializare
+     * @return obiect de clasa Iterable (obiect iterabil care poate sa fie parcurs/iterat) ce reprezinta lista de prietenii din retea
+     * @throws RepoException daca nu exista nicio prietenie in reteaua de socializare
      */
     public Iterable<Friendship> getAllFriendships() throws RepoException {
         return friendshipService.getAll();

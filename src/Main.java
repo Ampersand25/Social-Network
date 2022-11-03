@@ -15,6 +15,7 @@ public class Main {
     public static void main(String[] args) {
         // TODO: write documentation
         // TODO: create test functions
+        // TODO: add adress for user entity
 
         ApplicationTester applicationTester = new ApplicationTester();
         applicationTester.runAllTests();
