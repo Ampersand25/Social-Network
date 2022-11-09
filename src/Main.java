@@ -15,7 +15,6 @@ public class Main {
     public static void main(String[] args) {
         // TODO: add Address entity in the application
         // TODO: incapsulate Address entity as private attribute in User entity
-        // TODO: fix the following bug: when removing a friendship between two users and then creating a friendship between the same users an error occurs
         // TODO: create file repositories for the entities
         // TODO: create database repositories for the entities
         // TODO: create test functions
