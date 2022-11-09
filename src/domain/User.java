@@ -127,7 +127,7 @@ public class User extends Entity<Long> {
      */
     @Override
     public String toString() {
-        return "id=" + super.getId() + "|first name=" + getFirstName() + "|last name=" + getLastName() + "|birthday=" + getBirthday() + "|email=" + getEmail() + "|" + getAddress().toString();
+        return "id=" + super.getId() + ";first name=" + getFirstName() + ";last name=" + getLastName() + ";birthday=" + getBirthday() + ";email=" + getEmail() + ";" + getAddress().toString();
     }
 
     /**

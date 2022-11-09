@@ -49,7 +49,7 @@ public class Address {
 
     @Override
     public String toString() {
-        return "home address (street name, street number, building number, floor, etc)=" + getHomeAddress() + "|country=" + getCountry() + "|county=" + getCounty() + "|city=" + getCity();
+        return "home address (street name, street number, building number, floor, etc)=" + getHomeAddress() + ";country=" + getCountry() + ";county=" + getCounty() + ";city=" + getCity();
     }
 
     @Override

@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.NotNull;
+
 public class UserService {
     private final IValidator<User> validator;
     private final IRepository<Long, User> repo;
@@ -38,10 +40,16 @@ public class UserService {
      * @param validator obiect de clasa IValidator (interfata de tip template care are User ca si parametru) folosit pentru validarea utilizatorilor (obiectelor de clasa User)
      * @param repo obiect de clasa IRepository (interfata de tip IRepository care are Long si User ca si parametri) folosit pentru stocarea utilizatorilor (obiectelor de clasa User) in memorie (repozitoriu)
      */
-    public UserService(IValidator<User> validator, IRepository<Long, User> repo) {
+    public UserService(IValidator<User> validator, @NotNull IRepository<Long, User> repo) {
         this.validator = validator;
         this.repo = repo;
-        this.availableId = 0L;
+        availableId = 0L;
+        try {
+            for(User user : repo.getAll()) {
+                availableId = Math.max(availableId, user.getId());
+            }
+            ++availableId;
+        } catch(RepoException ignored) {}
     }
 
     /**
@@ -86,12 +94,14 @@ public class UserService {
         validateId(userId);
 
         User removedUser = repo.remove(userId);
-        Iterable<User> allUsers = repo.getAll();
-        allUsers.forEach(user -> {
-            List<User> friendListOfCurrentUser = user.getFriendList();
-            List<User> filteredFriendListOfCurrentUser = friendListOfCurrentUser.stream().filter(friendOfUser -> !friendOfUser.equals(removedUser)).collect(Collectors.toList());
-            user.setFriendList(filteredFriendListOfCurrentUser);
-        });
+        try {
+            Iterable<User> allUsers = repo.getAll();
+            allUsers.forEach(user -> {
+                List<User> friendListOfCurrentUser = user.getFriendList();
+                List<User> filteredFriendListOfCurrentUser = friendListOfCurrentUser.stream().filter(friendOfUser -> !friendOfUser.equals(removedUser)).collect(Collectors.toList());
+                user.setFriendList(filteredFriendListOfCurrentUser);
+            });
+        } catch(RepoException ignored) {}
 
         return removedUser;
     }
