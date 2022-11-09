@@ -45,7 +45,8 @@ public class UserService {
         this.repo = repo;
         availableId = 0L;
         try {
-            for(User user : repo.getAll()) {
+            Iterable<User> users = repo.getAll();
+            for(User user : users) {
                 availableId = Math.max(availableId, user.getId());
             }
             ++availableId;

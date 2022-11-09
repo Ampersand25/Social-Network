@@ -82,11 +82,18 @@ public class FriendshipService {
      * @param repo obiect de clasa IRepository (interfata de tip template care are Long si Friendship ca si parametri) folosit pentru stocarea relatiilor de prietenie (obiectelor de clasa Friendship) in memorie (repozitoriu)
      * @param userRepo obiect de clasa IRepository (interfata de tip template care are Long si User ca si parametri) folosit pentru stocarea utilizatorilor (obiectelor de clasa User) in memorie (repozitoriu)
      */
-    public FriendshipService(IValidator<Friendship> validator, IRepository<Long, Friendship> repo, IRepository<Long, User> userRepo) {
+    public FriendshipService(IValidator<Friendship> validator, @NotNull IRepository<Long, Friendship> repo, IRepository<Long, User> userRepo) {
         this.validator = validator;
         this.friendshipRepo = repo;
         this.userRepo = userRepo;
-        this.availableId = 0L;
+        availableId = 0L;
+        try {
+            Iterable<Friendship> friendships = repo.getAll();
+            for(Friendship friendship : friendships) {
+                availableId = Math.max(availableId, friendship.getId());
+            }
+            ++availableId;
+        } catch(RepoException ignored) {}
     }
 
     /**
