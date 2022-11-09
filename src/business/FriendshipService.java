@@ -9,7 +9,7 @@ import exception.ServiceException;
 import validation.IValidator;
 import infrastructure.IRepository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FriendshipService {
@@ -159,10 +159,10 @@ public class FriendshipService {
 
         Friendship friendship;
         if(firstFriendId <= secondFriendId) {
-            friendship = new Friendship(friendshipId, firstFriend, secondFriend, LocalDate.now());
+            friendship = new Friendship(friendshipId, firstFriend, secondFriend, LocalDateTime.now());
         }
         else {
-            friendship = new Friendship(friendshipId, secondFriend, firstFriend, LocalDate.now());
+            friendship = new Friendship(friendshipId, secondFriend, firstFriend, LocalDateTime.now());
         }
 
         validator.validate(friendship);
@@ -181,22 +181,22 @@ public class FriendshipService {
      * @param friendshipId obiect de clasa Long (valoare numerica intreaga cu semn (signed)) ce reprezinta identificatorul unic al prieteniei (al obiectului de clasa Friendship)
      * @param firstFriendId obiect ce clasa Long (valoare numerica intreaga cu semn (signed)) ce reprezinta noul prim prieten al relatiei de prietenie
      * @param secondFriendId obiect ce clasa Long (valoare numerica intreaga cu semn (signed)) ce reprezinta noul cel de al doilea prieten al relatiei de prietenie
-     * @param date obiect de clasa LocalDate ce reprezinta noua data calendaristica (zi, luna, an) la care relatia de prietenie s-a legat intre cei doi prieteni: cel cu id-ul firstFriendId si cel cu id-ul secondFriendId
+     * @param friendsFrom obiect de clasa LocalDateTime ce reprezinta noua data calendaristica (zi, luna, an, ora, minut, secunda) la care relatia de prietenie s-a legat intre cei doi prieteni: cel cu id-ul firstFriendId si cel cu id-ul secondFriendId
      * @return obiect de clasa Friendship ce reprezinta prietenia (obiectul de clasa Friendship) modificata din retea
      * @throws ValidationException daca noua prietenie creata nu este valida (id-ul primului prieten sau al celui de al doilea nu este valid)
      * @throws RepoException daca nu exista prietenii in retea sau nu exista nicio relatie de prieteni care sa aiba id-ul egal cu id-ul noi relatii de prietenie (parametrul friendshipId)
-     * @throws IllegalArgumentException daca friendshipId, firstFriendId sau secondFriendId sunt invalide (sunt egale cu null sau sunt valori numerice strict negative)
+     * @throws IllegalArgumentException daca friendshipId, firstFriendId sau secondFriendId sunt invalide (sunt egale cu null sau sunt valori numerice strict negative) sau daca parametrul friendsFrom este invalid (este null, nu reprezinta un format corect de data si ora, reprezinta o data calendaristica din viitor sau reprezinta o data calendaristica mult prea veche (mai veche de 120 de ani))
      */
-    public Friendship modify(Long friendshipId, Long firstFriendId, Long secondFriendId, LocalDate date) throws ValidationException, RepoException, IllegalArgumentException {
+    public Friendship modify(Long friendshipId, Long firstFriendId, Long secondFriendId, LocalDateTime friendsFrom) throws ValidationException, RepoException, IllegalArgumentException {
         User firstFriend = userRepo.search(firstFriendId);
         User secondFriend = userRepo.search(secondFriendId);
 
         Friendship friendship;
         if(firstFriendId <= secondFriendId) {
-            friendship = new Friendship(friendshipId, firstFriend, secondFriend, date);
+            friendship = new Friendship(friendshipId, firstFriend, secondFriend, friendsFrom);
         }
         else {
-            friendship = new Friendship(friendshipId, secondFriend, firstFriend, date);
+            friendship = new Friendship(friendshipId, secondFriend, firstFriend, friendsFrom);
         }
 
         validator.validate(friendship);

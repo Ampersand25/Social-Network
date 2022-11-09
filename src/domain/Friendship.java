@@ -2,13 +2,13 @@ package domain;
 
 import utils.Constants;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Friendship extends Entity<Long> {
     private User firstFriend;
     private User secondFriend;
-    private LocalDate date;
+    private LocalDateTime friendsFrom;
 
     /**
      * Constructor public al unui obiect de clasa Friendship care primeste doi parametri de intrare: firstFriend de tipul User (utilizator din reteaua de socializare) si secondFriend de tipul User (utilizator din reteaua de socializare)
@@ -18,33 +18,33 @@ public class Friendship extends Entity<Long> {
     public Friendship(User firstFriend, User secondFriend) {
         this.firstFriend = firstFriend;
         this.secondFriend = secondFriend;
-        this.date = LocalDate.now();
+        this.friendsFrom = LocalDateTime.now();
     }
 
     /**
-     * Constructor public al unui obiect de clasa Friendship care primeste trei parametri de intrare: firstFriend de tipul User, secondFriend de tipul User si date de tipul LocalDate
+     * Constructor public al unui obiect de clasa Friendship care primeste trei parametri de intrare: firstFriend de tipul User, secondFriend de tipul User si friendsFrom de tipul LocalDateTime
      * @param firstFriend obiect de clasa User (entitate) care reprezinta un utilizator valid din reteaua de socializare simbolizand primul prieten al relatiei de prietenie
      * @param secondFriend obiect de clasa User (entitate) care reprezinta un utilizator valid din reteaua de socializare simbolizand al doilea prieten al relatiei de prietenie
-     * @param date obiect de clasa LocalDate care reprezinta data la care s-a legat relatia de prietenie dintre cei doi useri/utilizatori: firstFriends si secondFriend
+     * @param friendsFrom obiect de clasa LocalDateTime care reprezinta data si ora la care s-a legat relatia de prietenie dintre cei doi useri/utilizatori: firstFriends si secondFriend
      */
-    public Friendship(User firstFriend, User secondFriend, LocalDate date) {
+    public Friendship(User firstFriend, User secondFriend, LocalDateTime friendsFrom) {
         this.firstFriend = firstFriend;
         this.secondFriend = secondFriend;
-        this.date = date;
+        this.friendsFrom = friendsFrom;
     }
 
     /**
-     * Constructor public al unui obiect de clasa Friendship care primeste patru parametri de intrare: id de tipul Long, firstFriend de tipul User, secondFriend de tipul User si date de tipul LocalDate
-     * @param id obiect de clasa Long reprezentand identificatorul unic al relatiei de prietenie dintre firstFriend si secondFriend (prietenie legata la data date)
+     * Constructor public al unui obiect de clasa Friendship care primeste patru parametri de intrare: id de tipul Long, firstFriend de tipul User, secondFriend de tipul User si friendsFrom de tipul LocalDateTime
+     * @param id obiect de clasa Long reprezentand identificatorul unic al relatiei de prietenie dintre firstFriend si secondFriend (prietenie legata la data si ora egala cu valoarea atributului privat friendsFrom al obiectului de clasa Friendship)
      * @param firstFriend obiect de clasa User (entitate) care reprezinta un utilizator valid din reteaua de socializare simbolizand primul prieten al relatiei
      * @param secondFriend obiect de clasa User (entitate) care reprezinta un utilizator valid din reteaua de socializare simbolizand al doilea prieten al relatiei
-     * @param date obiect de clasa LocalDate care reprezinta data la care s-a legat relatia de prietenie dintre cei doi useri/utilizatori: firstFriends si secondFriend
+     * @param friendsFrom obiect de clasa LocalDateTime care reprezinta data si ora la care s-a legat relatia de prietenie dintre cei doi useri/utilizatori: firstFriends si secondFriend
      */
-    public Friendship(Long id, User firstFriend, User secondFriend, LocalDate date) {
+    public Friendship(Long id, User firstFriend, User secondFriend, LocalDateTime friendsFrom) {
         super(id);
         this.firstFriend = firstFriend;
         this.secondFriend = secondFriend;
-        this.date = date;
+        this.friendsFrom = friendsFrom;
     }
 
     /**
@@ -80,19 +80,19 @@ public class Friendship extends Entity<Long> {
     }
 
     /**
-     * Metoda publica de tip getter care returneaza/intoarce atributul date al unui obiect de clasa Friendship (al unei prietenii din reteaua de socializare)
-     * @return obiect de clasa LocalDate reprenzentand data (zi, luna, an) la care prietenia a fost legata intre cei doi prieteni: firstFriend si secondFriend
+     * Metoda publica de tip getter care returneaza/intoarce atributul friendsFrom al unui obiect de clasa Friendship (adica al unei prietenii din reteaua de socializare)
+     * @return obiect de clasa LocalDateTime reprenzentand data (zi, luna, an) si ora (ora, minut, secunda) la care prietenia a fost legata intre cei doi prieteni: firstFriend si secondFriend (atribute private ale obiectului de clasa Friendship)
      */
-    public LocalDate getDate() {
-        return date;
+    public LocalDateTime getFriendsFrom() {
+        return friendsFrom;
     }
 
     /**
-     * Metoda publica de tip setter care modifica/actualizeaza data la care a fost creata relatia de prietenie (obiect de clasa Friendship)
-     * @param date obiect de clasa LocalDate reprenzentand noua data (zi, luna, an) la care prietenia a fost intemeiata intre cei doi prieteni reprezentati de atributele firstFriend si secondFriend
+     * Metoda publica de tip setter care modifica/actualizeaza data si ora la care a fost creata relatia de prietenie (obiect de clasa Friendship)
+     * @param friendsFrom obiect de clasa LocalDateTime reprenzentand noua data (zi, luna, an) si ora (ora, minut, secunda) la care prietenia a fost intemeiata intre cei doi prieteni reprezentati de atributele firstFriend si secondFriend
      */
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setFriendsFrom(LocalDateTime friendsFrom) {
+        this.friendsFrom = friendsFrom;
     }
 
     /**
@@ -101,7 +101,7 @@ public class Friendship extends Entity<Long> {
      */
     @Override
     public String toString() {
-        return "id: " + super.getId() + "\nfirst friend: " + getFirstFriend() + "\nsecond friend: " + getSecondFriend() + "\ndate when the friendship was created: " + getDate().format(Constants.DATE_TIME_FORMATTER);
+        return "id: " + super.getId() + "\nfirst friend: " + getFirstFriend() + "\nsecond friend: " + getSecondFriend() + "\ndate (year, month, day) and time (hour, minute, second) when the friendship was created: " + getFriendsFrom().format(Constants.DATE_TIME_FORMATTER);
     }
 
     /**

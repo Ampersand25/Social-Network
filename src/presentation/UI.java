@@ -12,6 +12,7 @@ import utils.Constants;
 import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -55,8 +56,8 @@ public class UI {
         String lastName = scanner.nextLine();
 
         try {
-            System.out.print("Introduce the birthday of the new user: ");
-            LocalDate birthday = LocalDate.parse(scanner.nextLine(), Constants.DATE_TIME_FORMATTER);
+            System.out.print("Introduce the birthday (year, month, day) of the new user: ");
+            LocalDate birthday = LocalDate.parse(scanner.nextLine(), Constants.DATE_FORMATTER);
 
             System.out.print("Introduce email adress of the new user: ");
             String email = scanner.nextLine();
@@ -299,17 +300,17 @@ public class UI {
             System.out.print("Introduce the id of the new second friend: ");
             Long secondFriendId = Long.parseLong(scanner.nextLine());
 
-            System.out.print("Introduce the date when the friendship was created: ");
-            LocalDate date = LocalDate.parse(scanner.nextLine(), Constants.DATE_TIME_FORMATTER);
+            System.out.print("Introduce the date (year, month, day, hour, minute, second) when the friendship was created: ");
+            LocalDateTime friendsFrom = LocalDateTime.parse(scanner.nextLine(), Constants.DATE_TIME_FORMATTER);
 
-            Friendship modifiedFriendship = superService.modifyFriendship(friendshipId, firstFriendId, secondFriendId, date);
+            Friendship modifiedFriendship = superService.modifyFriendship(friendshipId, firstFriendId, secondFriendId, friendsFrom);
             printSuccessMessage("[&]Friendship modified with success!\nModified friendship:\n" + modifiedFriendship);
         } catch (ValidationException | RepoException ex) {
             printException(ex.getMessage());
         } catch(NumberFormatException ex) {
             printException("[!]Invalid id (id must be a non negative number)!\n");
         } catch(DateTimeParseException ex) {
-            printException("[!]Invalid date (the format of the date must be \"yyyy-MM-dd\")!\n");
+            printException("[!]Invalid date (the format of the date must be \"yyyy-MM-dd hh:mm:ss\")!\n");
         }
     }
 
@@ -462,7 +463,7 @@ public class UI {
                     printNumberOfCommunitiesUI();
                     break;
                 case "8":
-                    System.out.println("[x]Option currently unavailable!");
+                    System.out.println(ConsoleColors.PURPLE + "[x]Option currently unavailable!" + ConsoleColors.RESET);
                     break;
                 case "9":
                     getAllCommunitiesUI();
