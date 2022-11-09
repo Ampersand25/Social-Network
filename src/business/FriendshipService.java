@@ -10,7 +10,10 @@ import validation.IValidator;
 import infrastructure.IRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 public class FriendshipService {
     private final IValidator<Friendship> validator;
@@ -26,14 +29,16 @@ public class FriendshipService {
      * @param firstUser obiect de clasa User (utilizator valid din reteaua de socializare) reprezentand primul prieten din relatia de prietenie
      * @param secondUser obiect de clasa User (utilizator valid din reteaua de socializare) reprezentand al doilea prieten din relatia de prietenie
      */
-    private void addFriendToUser(User firstUser, User secondUser) {
+    private void addFriendToUser(@NotNull User firstUser, @NotNull User secondUser) {
         List<User> firstUserFriendList = firstUser.getFriendList();
-        firstUserFriendList.add(secondUser);
-        firstUser.setFriendList(firstUserFriendList);
+        List<User> firstUserFriendListUpdated = new ArrayList<>(firstUserFriendList);
+        firstUserFriendListUpdated.add(secondUser);
+        firstUser.setFriendList(firstUserFriendListUpdated);
 
         List<User> secondUserFriendList = secondUser.getFriendList();
-        secondUserFriendList.add(firstUser);
-        secondUser.setFriendList(secondUserFriendList);
+        List<User> secondUserFriendListUpdated = new ArrayList<>(secondUserFriendList);
+        secondUserFriendListUpdated.add(firstUser);
+        secondUser.setFriendList(secondUserFriendListUpdated);
     }
 
     /**
@@ -44,13 +49,15 @@ public class FriendshipService {
      * @param firstUser obiect de clasa User (utilizator valid din reteaua de socializare) reprezentand primul prieten din relatia de prietenie
      * @param secondUser obiect de clasa User (utilizator valid din reteaua de socializare) reprezentand al doilea prieten din relatia de prietenie
      */
-    private void deleteFriendFromUser(User firstUser, User secondUser) {
+    private void deleteFriendFromUser(@NotNull User firstUser, @NotNull User secondUser) {
         List<User> firstUserFriendList = firstUser.getFriendList();
-        List<User> filteredFirstUserFriendList = firstUserFriendList.stream().filter(user -> !user.equals(secondUser)).toList();
+        List<User> filteredFirstUserFriendList = new ArrayList<>();
+        filteredFirstUserFriendList = firstUserFriendList.stream().filter(user -> !user.equals(secondUser)).toList();
         firstUser.setFriendList(filteredFirstUserFriendList);
 
         List<User> secondUserFriendList = secondUser.getFriendList();
-        List<User> filteredSecondUserFriendList = secondUserFriendList.stream().filter(user -> !user.equals(firstUser)).toList();
+        List<User> filteredSecondUserFriendList = new ArrayList<>();
+        filteredSecondUserFriendList = secondUserFriendList.stream().filter(user -> !user.equals(firstUser)).toList();
         secondUser.setFriendList(filteredSecondUserFriendList);
     }
 
