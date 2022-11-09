@@ -24,7 +24,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-        // TODO: create file repositories for the entities
+        // TODO: update documentation (write specifications for the new methods/functions implemented)
         // TODO: create database repositories for the entities
         // TODO: create test functions
 
