@@ -12,7 +12,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 public class FriendshipFileRepo extends AbstractFileRepo<Long, Friendship> {
-    private IRepository<Long, User> userRepo;
+    private final IRepository<Long, User> userRepo;
 
     public FriendshipFileRepo(String fileName, IRepository<Long, User> userRepo) throws IOException, RepoException {
         super(fileName);

@@ -31,10 +31,10 @@ public class Main {
         ApplicationTester applicationTester = new ApplicationTester();
         applicationTester.runAllTests();
 
-        System.out.println("Alegeti cum sa se faca salvarea datelor:");
-        System.out.println("[1] - in memorie (in memoria RAM - Random Access Memory)");
-        System.out.println("[2] - in fisiere text (fisiere CSV - Comma Separated Values)");
-        System.out.println("[3] - in baza de date (baza de date SQL - Structured Query Language)");
+        System.out.println("Choose how to save the entities (data persistence):");
+        System.out.println("[1] - in memory (in RAM - Random Access Memory)");
+        System.out.println("[2] - in text files (in CSV - Comma Separated Values files)");
+        System.out.println("[3] - in database (in SQL - Structured Query Language database)");
 
         IRepository<Long, User> userRepo = new InMemoryRepo<>();
         IRepository<Long, Friendship> friendshipRepo = new InMemoryRepo<>();
