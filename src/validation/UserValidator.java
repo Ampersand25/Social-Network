@@ -1,15 +1,22 @@
 package validation;
 
+import domain.Address;
 import domain.User;
 import exception.ValidationException;
 import utils.Constants;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.LocalDate;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.NotNull;
+
 public class UserValidator implements IValidator<User> {
+    private final IValidator<Address> addressIValidator;
+
+    public UserValidator(IValidator<Address> addressIValidator) {
+        this.addressIValidator = addressIValidator;
+    }
+
     /**
      * Metoda privata de tip int (returneaza/intoarce un intreg (integer) cu semn (signed) pe 4 bytes/octeti (32 de biti)) care verifica daca un string dat ca si parametru reprezinta un nume valid (poate sa fie numele sau prenumele unei persoane din lumea reala)<br>
      * Valoarea numerica intreaga returnata de catre functie reprezinta codul de eroare (0 daca string-ul este valid si o valoare nenula (diferita de 0) daca string-ul nu este valid (nu poate reprezenta un nume real))
@@ -138,6 +145,12 @@ public class UserValidator implements IValidator<User> {
 
         if(!patternMatches(user.getEmail(), Constants.VALID_EMAIL_REGEX)) {
             err += "[!]Invalid email adress!\n";
+        }
+
+        try {
+            addressIValidator.validate(user.getAddress());
+        } catch(ValidationException ex) {
+            err += ex.getMessage();
         }
 
         if(err.length() != 0) {

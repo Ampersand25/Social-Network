@@ -59,10 +59,22 @@ public class UI {
             System.out.print("Introduce the birthday (year, month, day) of the new user: ");
             LocalDate birthday = LocalDate.parse(scanner.nextLine(), Constants.DATE_FORMATTER);
 
-            System.out.print("Introduce email adress of the new user: ");
+            System.out.print("Introduce the email adress of the new user: ");
             String email = scanner.nextLine();
 
-            superService.addUser(firstName, lastName, birthday, email);
+            System.out.print("Introduce the location (home address) of the new user: ");
+            String homeAddress = scanner.nextLine();
+
+            System.out.print("Introduce the country of the new user: ");
+            String country = scanner.nextLine();
+
+            System.out.print("Introduce the county of the new user: ");
+            String county = scanner.nextLine();
+
+            System.out.print("Introduce the city of the new user: ");
+            String city = scanner.nextLine();
+
+            superService.addUser(firstName, lastName, birthday, email, homeAddress, country, county, city);
             printSuccessMessage("[+]User added with success!");
         } catch (ValidationException | RepoException | IllegalArgumentException ex) {
             printException(ex.getMessage());
@@ -96,7 +108,19 @@ public class UI {
             System.out.print("Introduce the new last name of the user you want to modify: ");
             String lastName = scanner.nextLine();
 
-            User modifiedUser = superService.modifyUser(userId, firstName, lastName);
+            System.out.print("Introduce the new location (home address) of the user you want to modify: ");
+            String homeAddress = scanner.nextLine();
+
+            System.out.print("Introduce the new country of the user you want to modify: ");
+            String country = scanner.nextLine();
+
+            System.out.print("Introduce the new county of the user you want to modify: ");
+            String county = scanner.nextLine();
+
+            System.out.print("Introduce the new city of the user you want to modify: ");
+            String city = scanner.nextLine();
+
+            User modifiedUser = superService.modifyUser(userId, firstName, lastName, homeAddress, country, county, city);
             printSuccessMessage("[&]User modified with success!\nModified user: " + modifiedUser);
         } catch (ValidationException | RepoException ex) {
             printException(ex.getMessage());
@@ -176,16 +200,16 @@ public class UI {
 
     private void addUsersDebug() {
         try{
-            superService.addUser("Ben John"       , "O'Brien"     , LocalDate.of(1998, 10, 15), "ben_john98@ezybarber.com");
-            superService.addUser("William"        , "Day"         , LocalDate.of(1988, 12, 30), "will_day88@gmail.com");
-            superService.addUser("Charles Richard", "Kelly"       , LocalDate.of(1996, 3 , 13), "charlie_kelly96@yahoo.com");
-            superService.addUser("Donald"         , "Castaneda"   , LocalDate.of(1998, 7 , 4) , "donald_castaneda98@domain.com");
-            superService.addUser("Charles-Mike"   , "Lam"         , LocalDate.of(1986, 4 , 15), "charles_lam86@manghinsu.com");
-            superService.addUser("Robert"         , "Beck"        , LocalDate.of(1990, 7 , 23), "bert_beck90@otpku.com");
-            superService.addUser("O'Mikel"        , "Rowe"        , LocalDate.of(1984, 3 , 20), "rowe84@thekangsua.com");
-            superService.addUser("Mike-Abraham"   , "Dotson"      , LocalDate.of(1989, 9 , 5) , "mike_dotson89@bomukic.com");
-            superService.addUser("Joseph Michael" , "Tucker-Doyle", LocalDate.of(2001, 1 , 22), "joseph_mike01@avmap.com");
-            superService.addUser("Robert"         , "O'Gallagher" , LocalDate.of(1994, 12, 6) , "robertino94@gmailni.com");
+            superService.addUser("Ben John"       , "O'Brien"     , LocalDate.of(1998, 10, 15), "ben_john98@ezybarber.com"     , "Strada Caderea Bastiliei 11"             , "Romania", "Timis"    , "Timisoara");
+            superService.addUser("William"        , "Day"         , LocalDate.of(1988, 12, 30), "will_day88@gmail.com"         , "Piata Presei Libere 3-5"                 , "Romania", "Dolj"     , "Craiova");
+            superService.addUser("Charles Richard", "Kelly"       , LocalDate.of(1996, 3 , 13), "charlie_kelly96@yahoo.com"    , "Strada Bihor"                            , "Romania", "Brasov"   , "Brasov");
+            superService.addUser("Donald"         , "Castaneda"   , LocalDate.of(1998, 7 , 4) , "donald_castaneda98@domain.com", "Strada Economu Cezarescu 42"             , "Romania", "Cluj"     , "Cluj-Napoca");
+            superService.addUser("Charles-Mike"   , "Lam"         , LocalDate.of(1986, 4 , 15), "charles_lam86@manghinsu.com"  , "Strada Miletin"                          , "Romania", "Bihor"    , "Oradea");
+            superService.addUser("Robert"         , "Beck"        , LocalDate.of(1990, 7 , 23), "bert_beck90@otpku.com"        , "Calea Crangasi 29"                       , "Romania", "Braila"   , "Braila");
+            superService.addUser("O'Mikel"        , "Rowe"        , LocalDate.of(1984, 3 , 20), "rowe84@thekangsua.com"        , "Bulevardul Timisoara 26"                 , "Romania", "Arges"    , "Pitesti");
+            superService.addUser("Mike-Abraham"   , "Dotson"      , LocalDate.of(1989, 9 , 5) , "mike_dotson89@bomukic.com"    , "Piata Romana 6"                          , "Romania", "Mures"    , "Targu Mures");
+            superService.addUser("Joseph Michael" , "Tucker-Doyle", LocalDate.of(2001, 1 , 22), "joseph_mike01@avmap.com"      , "Bulevardul General Gheorghe Magheru 2-4" , "Romania", "Maramures", "Baia Mare");
+            superService.addUser("Robert"         , "O'Gallagher" , LocalDate.of(1994, 12, 6) , "robertino94@gmailni.com"      , "Aleea Istru Nr. 5, Bl P4, Ap31, Sector 6", "Romania", "Botosani" , "Botosani");
 
             printSuccessMessage("[+]All 10 users added with success!");
         } catch(ValidationException | RepoException | IllegalArgumentException ex) {

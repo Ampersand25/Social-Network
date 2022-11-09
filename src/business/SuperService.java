@@ -31,12 +31,16 @@ public class SuperService {
      * @param lastName obiect de clasa String (sir de caractere) ce reprezinta numele de familie al utilizatorului pe care dorim sa il adaugam in retea
      * @param birthday obiect de clasa LocalDate (data calendaristica) ce reprezinta data nasterii utilizatorului pe care dorim sa il adaugam in retea
      * @param email obiect de clasa String (sir de caractere) ce reprezinta adresa de email a utilizatorului pe care dorim sa il adaugam in retea
+     * @param homeAddress obiect de clasa String (sir de caractere) ce reprezinta adresa fizica (strada, numar, bloc, scara, etaj, etc) unde traieste utilizatorul pe care dorim sa il adaugam in retea
+     * @param country obiect de clasa String (sir de caractere) ce reprezinta tara in care traieste utilizatorul pe care dorim sa il adaugam in retea
+     * @param county obiect de clasa String (sir de caractere) ce reprezinta judetul in care traieste utilizatorul pe care dorim sa il adaugam in retea
+     * @param city obiect de clasa String (sir de caractere) ce reprezinta orasul in care traieste utilizatorul pe care dorim sa il adaugam in retea
      * @throws ValidationException daca utilizatorul creat nu este valid (are cel putin un atribut/camp invalid)
      * @throws RepoException daca utilizatorul exista deja in reteaua de socializare (exista un obiect de clasa User care are acelasi id)
      * @throws IllegalArgumentException daca identificatorul unic al utilizatorului nu este valid (este null sau este mai mic strict decat 0)
      */
-    public void addUser(String firstName, String lastName, LocalDate birthday, String email) throws ValidationException, RepoException, IllegalArgumentException {
-        userService.add(firstName, lastName, birthday, email);
+    public void addUser(String firstName, String lastName, LocalDate birthday, String email, String homeAddress, String country, String county, String city) throws ValidationException, RepoException, IllegalArgumentException {
+        userService.add(firstName, lastName, birthday, email, homeAddress, country, county, city);
     }
 
     /**
@@ -56,13 +60,17 @@ public class SuperService {
      * @param userId obiect de clasa Long (valoare numerica intreaga cu semn) ce reprezinta identificatorul unic al utilizatorului pe care dorim sa il modificam
      * @param firstName obiect de clasa String (sir de caractere) ce reprezinta prenumele utilizatorului pe care dorim sa il modificam
      * @param lastName obiect de clasa String (sir de caractere) ce reprezinta numele de familie al utilizatorului pe care dorim sa il modificam
+     * @param homeAddress obiect de clasa String (sir de caractere) ce reprezinta adresa fizica (strada, numar, bloc, scara, etaj, etc) unde traieste utilizatorul pe care dorim sa il adaugam in retea
+     * @param country obiect de clasa String (sir de caractere) ce reprezinta tara in care traieste utilizatorul pe care dorim sa il adaugam in retea
+     * @param county obiect de clasa String (sir de caractere) ce reprezinta judetul in care traieste utilizatorul pe care dorim sa il adaugam in retea
+     * @param city obiect de clasa String (sir de caractere) ce reprezinta orasul in care traieste utilizatorul pe care dorim sa il adaugam in retea
      * @return obiect de clasa User care reprezinta utilizatorul modificat (inainte de modificare)
      * @throws ValidationException daca utilizatorul creat nu este valid (are cel putin un atribut/camp invalid)
      * @throws RepoException daca nu exista niciun utilizator in retea sau daca utilizatorul pe care dorim sa il modificam nu exista (nu exista niciun user cu id-ul userId)
      * @throws IllegalArgumentException daca id-ul userId este invalid (este null sau este o valoare numerica intreaga strict negativa)
      */
-    public User modifyUser(Long userId, String firstName, String lastName) throws ValidationException, RepoException, IllegalArgumentException {
-        return userService.modify(userId, firstName, lastName);
+    public User modifyUser(Long userId, String firstName, String lastName, String homeAddress, String country, String county, String city) throws ValidationException, RepoException, IllegalArgumentException {
+        return userService.modify(userId, firstName, lastName, homeAddress, country, county, city);
     }
 
     /**

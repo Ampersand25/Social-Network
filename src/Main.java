@@ -1,6 +1,8 @@
+import domain.Address;
 import domain.User;
 import domain.Friendship;
 import test.ApplicationTester;
+import validation.AddressValidator;
 import validation.IValidator;
 import validation.UserValidator;
 import validation.FriendshipValidator;
@@ -23,7 +25,8 @@ public class Main {
         ApplicationTester applicationTester = new ApplicationTester();
         applicationTester.runAllTests();
 
-        IValidator<User> userValidator = new UserValidator();
+        IValidator<Address> addressValidator = new AddressValidator();
+        IValidator<User> userValidator = new UserValidator(addressValidator);
         IRepository<Long, User> userRepo = new InMemoryRepo<>();
         UserService userService = new UserService(userValidator, userRepo);
 

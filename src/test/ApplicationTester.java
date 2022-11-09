@@ -5,11 +5,12 @@ import validation.*;
 import infrastructure.*;
 import business.*;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
 
 public class ApplicationTester {
     private User user1;
@@ -24,11 +25,11 @@ public class ApplicationTester {
 
     @BeforeEach
     public void setUp() {
-        user1 = new User("Abdul" , "Fountain", LocalDate.of(1997, 5 , 26), "abdul_fountain@emvil.com");
-        user2 = new User("Donna" , "Meyer"   , LocalDate.of(1999, 8 , 10), "donna_meyer@mailcuk.com");
-        user3 = new User("Tania" , "Whiteley", LocalDate.of(1991, 1 , 15), "tania_whiteley@nbobd.com");
-        user4 = new User("Nathan", "Browne"  , LocalDate.of(2001, 5 , 30), "nathan_browne@pow-pows.com");
-        user5 = new User("Aayat" , "Liu"     , LocalDate.of(1993, 11, 6) , "aayat_liu@wuupr.com");
+        user1 = new User("Abdul" , "Fountain", LocalDate.of(1997, 5 , 26), "abdul_fountain@emvil.com"  , new Address("Strada Fabrica de Chibrituri 2", "Romania", "Cluj"           , "Cluj-Napoca"));
+        user2 = new User("Donna" , "Meyer"   , LocalDate.of(1999, 8 , 10), "donna_meyer@mailcuk.com"   , new Address("Bulevardul Expozitiei 9"       , "Romania", "Mures"          , "Targu Mures"));
+        user3 = new User("Tania" , "Whiteley", LocalDate.of(1991, 1 , 15), "tania_whiteley@nbobd.com"  , new Address("Strada Pascani 8"              , "Romania", "Suceava"        , "Suceava"));
+        user4 = new User("Nathan", "Browne"  , LocalDate.of(2001, 5 , 30), "nathan_browne@pow-pows.com", new Address("Strada Brodina 3"              , "Romania", "Neamt"          , "Piatra Neamt"));
+        user5 = new User("Aayat" , "Liu"     , LocalDate.of(1993, 11, 6) , "aayat_liu@wuupr.com"       , new Address("Strada Jean Louis Calderon 1-5", "Romania", "Bistrita-Nasaud", "Bistrita"));
     }
 
     @Test

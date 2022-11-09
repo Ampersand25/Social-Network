@@ -5,6 +5,8 @@ import exception.ValidationException;
 
 import java.time.LocalDateTime;
 
+import org.jetbrains.annotations.NotNull;
+
 public class FriendshipValidator implements IValidator<Friendship> {
     /**
      * Metoda publica de tip void (nu intoarce/returneaza niciun rezultat) care valideaza o prietenie (un obiect de tipul Friendship)<br>
@@ -13,7 +15,7 @@ public class FriendshipValidator implements IValidator<Friendship> {
      * @throws ValidationException daca obiectul/entitatea friendship nu este valida (contine campuri/atribute/componente invalide)
      */
     @Override
-    public void validate(Friendship friendship) throws ValidationException {
+    public void validate(@NotNull Friendship friendship) throws ValidationException {
         String err = new String("");
 
         Long friendshipId = friendship.getId();
