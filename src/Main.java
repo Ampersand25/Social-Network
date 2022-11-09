@@ -15,9 +15,6 @@ import presentation.UI;
 
 public class Main {
     public static void main(String[] args) {
-        // TODO: add Address entity in the application
-        // TODO: add validator for Address entity
-        // TODO: incapsulate Address entity as private attribute in User entity
         // TODO: create file repositories for the entities
         // TODO: create database repositories for the entities
         // TODO: create test functions
