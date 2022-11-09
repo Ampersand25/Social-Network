@@ -39,11 +39,13 @@ public abstract class AbstractFileRepo<ID, E extends Entity<ID>> extends InMemor
 
     private void storeToFile() throws IOException, RepoException {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName, false));
-        Iterable<E> entities = super.getAll();
-        for(E entity : entities) {
-            bufferedWriter.write(convertEntityToString(entity));
-            bufferedWriter.newLine();
-        }
+        try {
+            Iterable<E> entities = super.getAll();
+            for(E entity : entities) {
+                bufferedWriter.write(convertEntityToString(entity));
+                bufferedWriter.newLine();
+            }
+        } catch(RepoException ignored) {}
         bufferedWriter.close();
     }
 
