@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import utils.Constants;
 
 public class UserFileRepo extends AbstractFileRepo<Long, User> {
     public UserFileRepo(String fileName) throws IOException, RepoException {
-        super(fileName);
+        super(fileName, true);
     }
 
     @Override
@@ -21,7 +22,7 @@ public class UserFileRepo extends AbstractFileRepo<Long, User> {
         Long id = Long.parseLong(attributes.get(0));
         String firstName = attributes.get(1);
         String lastName = attributes.get(2);
-        LocalDate birthday = LocalDate.parse(attributes.get(3));
+        LocalDate birthday = LocalDate.parse(attributes.get(3), Constants.DATE_FORMATTER);
         String email = attributes.get(4);
         List<User> friendList = new ArrayList<>();
         String homeAddress = attributes.get(5);
@@ -34,6 +35,6 @@ public class UserFileRepo extends AbstractFileRepo<Long, User> {
 
     @Override
     public String convertEntityToString(@NotNull User user) {
-        return user.getId().toString() + ";" + user.getFirstName() + ";" + user.getLastName() + ";" + user.getBirthday().toString() + ";" + user.getEmail() + ";" + user.getAddress().getHomeAddress() + ";" + user.getAddress().getCountry() + ";" + user.getAddress().getCounty() + ";" + user.getAddress().getCity();
+        return user.getId().toString() + ";" + user.getFirstName() + ";" + user.getLastName() + ";" + user.getBirthday().format(Constants.DATE_FORMATTER) + ";" + user.getEmail() + ";" + user.getAddress().getHomeAddress() + ";" + user.getAddress().getCountry() + ";" + user.getAddress().getCounty() + ";" + user.getAddress().getCity();
     }
 }

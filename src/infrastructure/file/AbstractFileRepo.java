@@ -19,7 +19,7 @@ public abstract class AbstractFileRepo<ID, E extends Entity<ID>> extends InMemor
 
     public abstract String convertEntityToString(E entity);
 
-    private void loadData() throws IOException, RepoException {
+    protected void loadData() throws IOException, RepoException {
         File file = new File(fileName);
         Scanner scanner = new Scanner(file);
         while(scanner.hasNextLine()) {
@@ -49,9 +49,11 @@ public abstract class AbstractFileRepo<ID, E extends Entity<ID>> extends InMemor
         bufferedWriter.close();
     }
 
-    public AbstractFileRepo(String fileName) throws IOException, RepoException {
+    public AbstractFileRepo(String fileName, boolean loadDataFlag) throws IOException, RepoException {
         this.fileName = fileName;
-        loadData();
+        if(loadDataFlag) {
+            loadData();
+        }
     }
 
     @Override
