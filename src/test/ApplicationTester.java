@@ -18,7 +18,9 @@ public class ApplicationTester {
     private User user4;
     private User user5;
 
-    public ApplicationTester() {}
+    public ApplicationTester() {
+        setUp();
+    }
 
     @BeforeEach
     public void setUp() {
@@ -122,8 +124,6 @@ public class ApplicationTester {
 
     @Test
     public void runTestsUser() {
-        setUp();
-
         user1.setId(0L);
         assertEquals(user1.getId(), 0L);
         assertEquals(user1.getFirstName(), "Abdul");
