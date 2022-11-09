@@ -13,9 +13,11 @@ import presentation.UI;
 
 public class Main {
     public static void main(String[] args) {
-        // TODO: write documentation
+        // TODO: add Address entity in the application
+        // TODO: incapsulate Address entity as private attribute in User entity
+        // TODO: change friendship's date from LocalDate to LocalDateTime
+        // TODO: update friendships's private attribute date name from "date" to "friendsFrom"
         // TODO: create test functions
-        // TODO: add adress for user entity
 
         ApplicationTester applicationTester = new ApplicationTester();
         applicationTester.runAllTests();
