@@ -153,6 +153,6 @@ public class User extends Entity<Long> {
         if(!(obj instanceof User that)) {
             return false;
         }
-        return Objects.equals(getId(), that.getId());
+        return Objects.equals(getId(), that.getId()) || Objects.equals(getEmail(), that.getEmail());
     }
 }

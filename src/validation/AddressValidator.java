@@ -48,7 +48,7 @@ public class AddressValidator implements IValidator<Address> {
             err += "[!]Invalid home address (home address must not be null)\n";
         }
         else if(homeAddress.length() == 0) {
-            err += "[!]Invalid home address (home address name is too short: minimum limit of characters is 4)!\n";
+            err += "[!]Invalid home address (home address name is too short: minimum limit of characters is one character)!\n";
         }
         else if(homeAddress.contains(";")) {
             err += "[!]Invalid home address (home address name must not contains ';' character)!\n";
@@ -59,7 +59,7 @@ public class AddressValidator implements IValidator<Address> {
             err += "[!]Invalid country (country must not be null)\n";
         }
         else if(country.length() < 4) {
-            err += "[!]Invalid country (country name is too short: minimum limit of characters is 4)!\n";
+            err += "[!]Invalid country (country name is too short: minimum limit of characters is 4 characters)!\n";
         }
         else {
             err += switch(validAddressName(country)) {
@@ -77,7 +77,7 @@ public class AddressValidator implements IValidator<Address> {
             err += "[!]Invalid county (county must not be null)\n";
         }
         else if(county.length() == 0) {
-            err += "[!]Invalid county (county name is too short: minimum limit of characters is 4)!\n";
+            err += "[!]Invalid county (county name is too short: minimum limit of characters is one character)!\n";
         }
         else {
             err += switch(validAddressName(county)) {
@@ -95,7 +95,7 @@ public class AddressValidator implements IValidator<Address> {
             err += "[!]Invalid city (city must not be null)\n";
         }
         else if(city.length() == 0) {
-            err += "[!]Invalid city (city name is too short: minimum limit of characters is 4)!\n";
+            err += "[!]Invalid city (city name is too short: minimum limit of characters is one character)!\n";
         }
         else {
             err += switch(validAddressName(city)) {
