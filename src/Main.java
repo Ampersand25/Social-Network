@@ -25,8 +25,6 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
         // TODO: update documentation (write specifications for the new methods/functions implemented)
-        // TODO: make email address unique (two users should not have the same email)
-        // TODO: fix the following bug: when deleting an user, the friendships that contains that user are not deleted (and should be)
         // TODO: create database repositories for the entities
         // TODO: create test functions
 
