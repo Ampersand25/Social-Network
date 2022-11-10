@@ -273,7 +273,7 @@ public class FriendshipService {
             return userRepo.len();
         }
 
-        SocialNetworkGraph graph = new SocialNetworkGraph(allUsers, allFriendships);
+        SocialNetworkGraph graph = new SocialNetworkGraph(allUsers, allFriendships, userRepo);
         return graph.numberOfCommunities();
     }
 
@@ -283,7 +283,7 @@ public class FriendshipService {
      * @throws RepoException daca nu exista utilizatori (obiecte de clasa User) in reteaua de socializare
      */
     public List<List<Long>> getAllCommunities() throws RepoException {
-        SocialNetworkGraph graph = new SocialNetworkGraph(userRepo.getAll(), friendshipRepo.getAll());
+        SocialNetworkGraph graph = new SocialNetworkGraph(userRepo.getAll(), friendshipRepo.getAll(), userRepo);
         return graph.getAllCommunities();
     }
 }

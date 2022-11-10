@@ -1,5 +1,8 @@
 package domain;
 
+import exception.RepoException;
+import infrastructure.IRepository;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -10,6 +13,7 @@ public class SocialNetworkGraph {
     private boolean[][] adjacentMatrix;
     private final int size;
     boolean[] visitedNodes;
+    IRepository<Long, User> userRepo;
 
     /**
      * Metoda privata de tipul Long care returneaza/intoarce cel mai mare id al unui user/utilizator dintr-o lista de utilizatori (obiecte de clasa User) data ca si parametru de intrare pentru metoda
@@ -94,10 +98,13 @@ public class SocialNetworkGraph {
         initVisitedNodes();
 
         for(int i = 0; i < size; ++i) {
-            if(!visitedNodes[i]) {
-                ++numberOfConnectedComponents;
-                dfsVisit(i);
-            }
+            try {
+                userRepo.search((long)i);
+                if(!visitedNodes[i]) {
+                    ++numberOfConnectedComponents;
+                    dfsVisit(i);
+                }
+            } catch(RepoException ignored) {}
         }
 
         return numberOfConnectedComponents;
@@ -107,10 +114,12 @@ public class SocialNetworkGraph {
      * Constructor public care primeste doi parametri: users (lista de utilizatori valizi din reteaua de socializare) si friendships (lista de prietenii valide din reteaua de socializare)
      * @param users lista de obiecte de clasa User reprezentand lista de useri/utilizatori din reteaua de socializare
      * @param friendships lista de obiecte de clasa Friendship reprezentand lista de prietenii din reteaua de socializare
+     * @param userRepo obiect de clasa IRepository reprezentand repozitoriul de utilizatori din cadrul aplicatiei
      */
-    public SocialNetworkGraph(Iterable<User> users, Iterable<Friendship> friendships) {
+    public SocialNetworkGraph(Iterable<User> users, Iterable<Friendship> friendships, IRepository<Long, User> userRepo) {
         size = getUserMaxId(users).intValue() + 1;
         computeAdjacentMatrix(friendships);
+        this.userRepo = userRepo;
     }
 
     /**
@@ -139,10 +148,10 @@ public class SocialNetworkGraph {
             src = queue.poll().intValue();
             community.add((long)src);
 
-            for(int i = 0; i < size; ++i) {
-                if(adjacentMatrix[src][i] && !visitedNodes[i]) {
-                    visitedNodes[i] = true;
-                    queue.add((long)i);
+            for(int node = 0; node < size; ++node) {
+                if(adjacentMatrix[src][node] && !visitedNodes[node]) {
+                    visitedNodes[node] = true;
+                    queue.add((long)node);
                 }
             }
         }
@@ -164,9 +173,12 @@ public class SocialNetworkGraph {
         initVisitedNodes();
 
         for(int i = 0; i < size; ++i) {
-            if(!visitedNodes[i]) {
-                communities.add(bfsVisit(i));
-            }
+            try {
+                userRepo.search((long)i);
+                if(!visitedNodes[i]) {
+                    communities.add(bfsVisit(i));
+                }
+            } catch(RepoException ignored) {}
         }
 
         return communities;

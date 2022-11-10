@@ -7,6 +7,7 @@ import infrastructure.IRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
@@ -15,10 +16,30 @@ import utils.Constants;
 public class FriendshipFileRepo extends AbstractFileRepo<Long, Friendship> {
     private final IRepository<Long, User> userRepo;
 
+    private void addFriendToUser(@NotNull User firstUser, @NotNull User secondUser) {
+        List<User> firstUserFriendList = firstUser.getFriendList();
+        List<User> firstUserFriendListUpdated = new ArrayList<>(firstUserFriendList);
+        firstUserFriendListUpdated.add(secondUser);
+        firstUser.setFriendList(firstUserFriendListUpdated);
+
+        List<User> secondUserFriendList = secondUser.getFriendList();
+        List<User> secondUserFriendListUpdated = new ArrayList<>(secondUserFriendList);
+        secondUserFriendListUpdated.add(firstUser);
+        secondUser.setFriendList(secondUserFriendListUpdated);
+    }
+
     public FriendshipFileRepo(String fileName, IRepository<Long, User> userRepo) throws IOException, RepoException {
         super(fileName, false);
         this.userRepo = userRepo;
         super.loadData();
+        try {
+            Iterable<Friendship> friendships = super.getAll();
+            for(Friendship friendship : friendships) {
+                User firstFriend = friendship.getFirstFriend();
+                User secondFriend = friendship.getSecondFriend();
+                addFriendToUser(firstFriend, secondFriend);
+            }
+        } catch(RepoException ignored) {}
     }
 
     @Override
