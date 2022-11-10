@@ -40,10 +40,11 @@ public class UI {
         System.out.println("[2] - remove existing user");
         System.out.println("[3] - modify existing user");
         System.out.println("[4] - search user after id");
-        System.out.println("[5] - get the number of existing users");
-        System.out.println("[6] - get all existing users");
-        System.out.println("[7] - get all friends of a given user");
-        System.out.println("[8] - add 10 users in the social network");
+        System.out.println("[5] - search user after name");
+        System.out.println("[6] - get the number of existing users");
+        System.out.println("[7] - get all existing users");
+        System.out.println("[8] - get all friends of a given user");
+        System.out.println("[9] - add 10 users in the social network");
         System.out.println("*type \"menu\" to display the users menu");
         System.out.println("**type \"exit\" to exit the application");
     }
@@ -143,6 +144,26 @@ public class UI {
         }
     }
 
+    private void searchUserAfterNameUI(@NotNull Scanner scanner) {
+        System.out.print("Introduce the name of the user you want to search: ");
+        String name = scanner.nextLine();
+        try{
+            List<User> searchedUsers = superService.searchUserAfterName(name);
+            if(searchedUsers.size() == 0) {
+                printSuccessMessage("[?]There is no user with the name \"" + name + "\"!");
+            }
+            else if(searchedUsers.size() == 1) {
+                printSuccessMessage("[?]The only user that contains the name \"" + name + "\" is:\n" + searchedUsers.get(0));
+            }
+            else{
+                printSuccessMessage("[?]All " + searchedUsers.size() + " users that contains the name \"" + name + "\" are:");
+                searchedUsers.forEach(user -> printSuccessMessage(user.toString()));
+            }
+        } catch(RepoException | ServiceException ex) {
+            printException(ex.getMessage());
+        }
+    }
+
     private void numberOfUsersUI() {
         int numberOfUsers = superService.numberOfUsers();
         if(numberOfUsers == 0) {
@@ -174,7 +195,7 @@ public class UI {
         }
     }
 
-    private void getFriendsOfUserUI(Scanner scanner) {
+    private void getFriendsOfUserUI(@NotNull Scanner scanner) {
         try {
             System.out.print("Introduce the id of the user: ");
             Long userId = Long.parseLong(scanner.nextLine());
@@ -243,15 +264,18 @@ public class UI {
                     searchUserUI(scanner);
                     break;
                 case "5":
-                    numberOfUsersUI();
+                    searchUserAfterNameUI(scanner);
                     break;
                 case "6":
-                    getAllUsersUI();
+                    numberOfUsersUI();
                     break;
                 case "7":
-                    getFriendsOfUserUI(scanner);
+                    getAllUsersUI();
                     break;
                 case "8":
+                    getFriendsOfUserUI(scanner);
+                    break;
+                case "9":
                     addUsersDebug();
                     break;
                 case "menu":

@@ -232,6 +232,26 @@ public class UserService {
         return userRepo.search(userId);
     }
 
+    public List<User> searchUserAfterName(String name) throws RepoException, ServiceException {
+        if(name == null) {
+            throw new ServiceException("[!]Invalid name (name must not be null)!\n");
+        }
+        else if(name.length() == 0) {
+            throw new ServiceException("[!]Invalid name (name must be non-empty)!\n");
+        }
+
+        List<User> searchedUsers = new ArrayList<>();
+
+        Iterable<User> users = userRepo.getAll();
+        users.forEach(user -> {
+            if(user.getFirstName().contains(name) || user.getLastName().contains(name)) {
+                searchedUsers.add(user);
+            }
+        });
+
+        return searchedUsers;
+    }
+
     /**
      * Metoda publica de tip operand/rezultat care returneaza/intoarce numarul total al utilizatorilor (obiectelor de clasa User) din reteaua de socializare
      * @return valoare numerica intreaga cu semn (signed) pe 4 bytes/octeti (32 de biti) ce reprezinta numarul de utilizatori din retea

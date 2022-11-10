@@ -85,6 +85,10 @@ public class SuperService {
         return userService.search(userId);
     }
 
+    public List<User> searchUserAfterName(String name) throws RepoException, ServiceException {
+        return userService.searchUserAfterName(name);
+    }
+
     /**
      * Metoda publica de tip operand/rezultat care returneaza/intoarce numarul total al utilizatorilor (obiectelor de clasa User) din reteaua de socializare
      * @return valoare numerica intreaga cu semn (signed) pe 4 bytes/octeti (32 de biti) ce reprezinta numarul de utilizatori din retea
