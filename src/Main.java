@@ -73,7 +73,7 @@ public class Main {
 
         IValidator<Address> addressValidator = new AddressValidator();
         IValidator<User> userValidator = new UserValidator(addressValidator);
-        UserService userService = new UserService(userValidator, userRepo);
+        UserService userService = new UserService(userValidator, userRepo, friendshipRepo);
 
         IValidator<Friendship> friendshipValidator = new FriendshipValidator();
         FriendshipService friendshipService = new FriendshipService(friendshipValidator, friendshipRepo, userRepo);

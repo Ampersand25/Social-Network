@@ -1,6 +1,7 @@
 package business;
 
 import domain.Address;
+import domain.Friendship;
 import domain.User;
 import exception.ValidationException;
 import exception.RepoException;
@@ -11,14 +12,68 @@ import infrastructure.IRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 
 public class UserService {
     private final IValidator<User> validator;
-    private final IRepository<Long, User> repo;
+    private final IRepository<Long, User> userRepo;
+    private final IRepository<Long, Friendship> friendshipRepo;
     private Long availableId;
+
+    /**
+     * Metoda privata de tip operand/rezultat care returneaza/intoarce prin numele ei (prin numele functiei/metodei) identificatorul cel mai mare al unui user/utilizator (obiect de clasa User) ce exista in repozitoriul reprezentat de atributul privat userRepo
+     * @return obiect de clasa Long (valoare numerica intreaga cu semn (signed)) ce semnifica id-ul maxim al unui utilizator din reteaua de socializare
+     */
+    private Long maximumUserId() {
+        long maxUserId = 0L;
+
+        try {
+            Iterable<User> users = userRepo.getAll();
+            for(User user : users) {
+                maxUserId = Math.max(maxUserId, user.getId());
+            }
+        } catch(RepoException ignored) {}
+
+        return maxUserId;
+    }
+
+    private void removeAllFriendshipsThatContainsIds(Iterable<Long> ids) {
+        for(Long id : ids) {
+            try {
+                friendshipRepo.remove(id);
+            } catch(RepoException ignored) {}
+        }
+    }
+
+    private void removeFriendshipsThatContainsUser(User user) {
+        try{
+            Iterable<Friendship> friendships = friendshipRepo.getAll();
+            List<Long> idsOfUsersToBeRemoved = new ArrayList<>();
+            friendships.forEach(friendship -> {
+                if(friendship.getFirstFriend().equals(user) || friendship.getSecondFriend().equals(user)) {
+                    idsOfUsersToBeRemoved.add(friendship.getId());
+                }
+            });
+            removeAllFriendshipsThatContainsIds(idsOfUsersToBeRemoved);
+        } catch(RepoException ignored) {}
+    }
+
+    private void updateFriendshipsThatContainsUser(User user) {
+        try{
+            Iterable<Friendship> friendships = friendshipRepo.getAll();
+            friendships.forEach(friendship -> {
+                if(friendship.getFirstFriend().equals(user)) {
+                    friendship.setFirstFriend(user);
+                }
+                else if(friendship.getSecondFriend().equals(user)) {
+                    friendship.setSecondFriend(user);
+                }
+            });
+        } catch(RepoException ignored) {}
+    }
 
     /**
      * Metoda privata de tip void (procedura) care valideaza un obiect de clasa Long (verifica daca acesta este un identificator valid pentru un utilizator (obiect de clasa User))
@@ -38,19 +93,14 @@ public class UserService {
     /**
      * Constructor public al unui obiect de clasa UserService care primeste doi parametri de intrare: validator si repo
      * @param validator obiect de clasa IValidator (interfata de tip template care are User ca si parametru) folosit pentru validarea utilizatorilor (obiectelor de clasa User)
-     * @param repo obiect de clasa IRepository (interfata de tip IRepository care are Long si User ca si parametri) folosit pentru stocarea utilizatorilor (obiectelor de clasa User) in memorie (repozitoriu)
+     * @param userRepo obiect de clasa IRepository (interfata de tip IRepository care are Long si User ca si parametri) folosit pentru stocarea utilizatorilor (obiectelor de clasa User) in memorie (repozitoriu)
+     * @param friendshipRepo obiect de clasa IRepository (interfata de tip IRepository care are Long si Friendship ca si parametri) folosit pentru stocarea relatiilor de prietenie (obiectelor de clasa Friendship) in repozitoriu
      */
-    public UserService(IValidator<User> validator, @NotNull IRepository<Long, User> repo) {
+    public UserService(IValidator<User> validator, @NotNull IRepository<Long, User> userRepo, IRepository<Long, Friendship> friendshipRepo) {
         this.validator = validator;
-        this.repo = repo;
-        availableId = 0L;
-        try {
-            Iterable<User> users = repo.getAll();
-            for(User user : users) {
-                availableId = Math.max(availableId, user.getId());
-            }
-            ++availableId;
-        } catch(RepoException ignored) {}
+        this.userRepo = userRepo;
+        this.friendshipRepo = friendshipRepo;
+        this.availableId = maximumUserId() + 1;
     }
 
     /**
@@ -80,7 +130,7 @@ public class UserService {
             throw new ValidationException(ex.getMessage());
         }
 
-        repo.add(user);
+        userRepo.add(user);
     }
 
     /**
@@ -94,15 +144,17 @@ public class UserService {
     public User remove(Long userId) throws RepoException, ServiceException, IllegalArgumentException {
         validateId(userId);
 
-        User removedUser = repo.remove(userId);
+        User removedUser = userRepo.remove(userId);
         try {
-            Iterable<User> allUsers = repo.getAll();
+            Iterable<User> allUsers = userRepo.getAll();
             allUsers.forEach(user -> {
                 List<User> friendListOfCurrentUser = user.getFriendList();
                 List<User> filteredFriendListOfCurrentUser = friendListOfCurrentUser.stream().filter(friendOfUser -> !friendOfUser.equals(removedUser)).collect(Collectors.toList());
                 user.setFriendList(filteredFriendListOfCurrentUser);
             });
         } catch(RepoException ignored) {}
+
+        removeFriendshipsThatContainsUser(removedUser);
 
         return removedUser;
     }
@@ -137,8 +189,8 @@ public class UserService {
         newUser.setFriendList(friendList);
         validator.validate(newUser);
 
-        User modifiedUser = repo.modify(newUser);
-        Iterable<User> allUsers = repo.getAll();
+        User modifiedUser = userRepo.modify(newUser);
+        Iterable<User> allUsers = userRepo.getAll();
         allUsers.forEach(user -> {
             List<User> friendListOfCurrentUser = user.getFriendList();
             List<User> filteredFriendListOfCurrentUser = friendListOfCurrentUser.stream().filter(friendOfUser -> !friendOfUser.equals(modifiedUser)).collect(Collectors.toList());
@@ -149,6 +201,8 @@ public class UserService {
 
             user.setFriendList(filteredFriendListOfCurrentUser);
         });
+
+        updateFriendshipsThatContainsUser(newUser);
 
         return modifiedUser;
     }
@@ -163,7 +217,7 @@ public class UserService {
      */
     public User search(Long userId) throws RepoException, ServiceException, IllegalArgumentException {
         validateId(userId);
-        return repo.search(userId);
+        return userRepo.search(userId);
     }
 
     /**
@@ -171,7 +225,7 @@ public class UserService {
      * @return valoare numerica intreaga cu semn (signed) pe 4 bytes/octeti (32 de biti) ce reprezinta numarul de utilizatori din retea
      */
     public int len() {
-        return repo.len();
+        return userRepo.len();
     }
 
     /**
@@ -181,7 +235,7 @@ public class UserService {
      * @throws RepoException daca nu exista niciun utilizator (obiect de clasa User) in reteaua de socializare
      */
     public Iterable<User> getAll() throws RepoException {
-        return repo.getAll();
+        return userRepo.getAll();
     }
 
     /**
@@ -194,6 +248,6 @@ public class UserService {
      */
     public List<User> getFriendsOfUser(Long userId) throws RepoException, ServiceException, IllegalArgumentException {
         validateId(userId);
-        return repo.search(userId).getFriendList();
+        return userRepo.search(userId).getFriendList();
     }
 }

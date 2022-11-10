@@ -17,9 +17,26 @@ import org.jetbrains.annotations.NotNull;
 
 public class FriendshipService {
     private final IValidator<Friendship> validator;
-    private final IRepository<Long, Friendship> friendshipRepo;
     private final IRepository<Long, User> userRepo;
+    private final IRepository<Long, Friendship> friendshipRepo;
     private Long availableId;
+
+    /**
+     * Metoda privata de tip operand/rezultat care returneaza identificatorul cel mai mare al unei prietenii (o prietenie este un obiect de clasa Friendship) din repozitoriu (atributul privat friendshipRepo)
+     * @return obiect de clasa Long (valoare numerica intreaga cu semn (signed)) ce semnifica id-ul maxim al unei prietenii din reteaua de socializare
+     */
+    private Long maximumFriendshipId() {
+        long maxFriendshipId = 0L;
+
+        try {
+            Iterable<Friendship> friendships = friendshipRepo.getAll();
+            for(Friendship friendship : friendships) {
+                maxFriendshipId = Math.max(maxFriendshipId, friendship.getId());
+            }
+        } catch(RepoException ignored) {}
+
+        return maxFriendshipId;
+    }
 
     /**
      * Metoda privata de tip void (functie procedurala) care adauga bidirectional (in ambele sensuri) un user/utilizator (obiect de clasa User) in lista de prieteni ai unui alt user/utilizator (obiect de clasa User)<br>
@@ -86,14 +103,7 @@ public class FriendshipService {
         this.validator = validator;
         this.friendshipRepo = repo;
         this.userRepo = userRepo;
-        availableId = 0L;
-        try {
-            Iterable<Friendship> friendships = repo.getAll();
-            for(Friendship friendship : friendships) {
-                availableId = Math.max(availableId, friendship.getId());
-            }
-            ++availableId;
-        } catch(RepoException ignored) {}
+        this.availableId = maximumFriendshipId() + 1;
     }
 
     /**
