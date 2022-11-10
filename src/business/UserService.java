@@ -40,14 +40,22 @@ public class UserService {
         return maxUserId;
     }
 
-    private void removeAllFriendshipsThatContainsIds(Iterable<Long> ids) {
-        for(Long id : ids) {
+    /**
+     * Metoda privata de tip void (functie procedurala) care sterge toate relatiile de prietenie din reteaua de socializare care au identificatorul unic egal cu unul din identificatorii din lista data ca si parametru de intrare metodiei (este vorba despre parametrul formal/simbolic ids)
+     * @param ids obiect de clasa Iterable (obiect iterabil (care poate sa fie parcurs/iterat)) cu elemente de tipul Long (valoare numerica intreaga cu semn (signed)) ce semnifica lista de id-uri ale prieteniilor (obiecte de clasa Friendship) pe care dorim sa le stergem/eliminam din retea
+     */
+    private void removeAllFriendshipsThatContainsIds(@NotNull Iterable<Long> ids) {
+        ids.forEach(id -> {
             try {
                 friendshipRepo.remove(id);
             } catch(RepoException ignored) {}
-        }
+        });
     }
 
+    /**
+     * Metoda privata de tip void (procedura) care sterge toate prieteniile (obiecte de clasa Friendship) care au utilizatorul user (obiect de clasa User) ca unul dintre cei doi prieteni (o prietenie este compusa din doi useri/utilizatori (adica din doua obiecte de clasa User))
+     * @param user obiect de clasa User (utilizator din reteaua de socializare) pe care dorim sa il eliminam din retea (sa stergem toate prieteniile care il contin)
+     */
     private void removeFriendshipsThatContainsUser(User user) {
         try{
             Iterable<Friendship> friendships = friendshipRepo.getAll();
@@ -61,6 +69,10 @@ public class UserService {
         } catch(RepoException ignored) {}
     }
 
+    /**
+     * Metoda privata de tip void (procedura (functie/metoda care nu intoarce/returneaza/furnizeaza niciun rezultat)) care actualizeaza toate prieteniile (obiecte de clasa Friendship) din reteaua de socializare care contin un anumit utilizator (obiect de clasa User) dat ca si parametru de intrare metodei
+     * @param user obiect de clasa User ce reprezinta unul dintre userii/utilizatorii existenti in reteaua de socializare si pe care vrem sa il actualizam (sa actualizam toate prieteniile care il contin)
+     */
     private void updateFriendshipsThatContainsUser(User user) {
         try{
             Iterable<Friendship> friendships = friendshipRepo.getAll();
