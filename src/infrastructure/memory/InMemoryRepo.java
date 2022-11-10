@@ -87,7 +87,7 @@ public class InMemoryRepo<ID, E extends Entity<ID>> implements IRepository<ID, E
         if(len() != 0) {
             Iterable<E> allEntities = getAll();
             for(E existingEntity : allEntities) {
-                if(entity.equals(existingEntity)) {
+                if(entity.equals(existingEntity) && existingEntity.getId() != entity.getId()) {
                     throw new RepoException("[!]There is a similar entity in the repository!\n");
                 }
             }

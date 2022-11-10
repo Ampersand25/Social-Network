@@ -50,6 +50,9 @@ public class AddressValidator implements IValidator<Address> {
         else if(homeAddress.length() == 0) {
             err += "[!]Invalid home address (home address name is too short: minimum limit of characters is 4)!\n";
         }
+        else if(homeAddress.contains(";")) {
+            err += "[!]Invalid home address (home address name must not contains ';' character)!\n";
+        }
 
         String country = address.getCountry();
         if(country == null) {

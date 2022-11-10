@@ -143,8 +143,12 @@ public class UserValidator implements IValidator<User> {
             err += "[!]Invalid birthday (user must not be older than 120 years old)!\n";
         }
 
+        String email = user.getEmail();
         if(!patternMatches(user.getEmail(), Constants.VALID_EMAIL_REGEX)) {
             err += "[!]Invalid email adress!\n";
+        }
+        else if(email.contains(";")) {
+            err += "[!]Invalid email adress (email must not contains ';' character)!\n";
         }
 
         try {
