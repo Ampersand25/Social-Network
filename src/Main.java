@@ -4,8 +4,6 @@ import domain.Friendship;
 import exception.RepoException;
 import infrastructure.file.UserFileRepo;
 import infrastructure.file.FriendshipFileRepo;
-import utils.ConsoleColors;
-import utils.Constants;
 import validation.IValidator;
 import validation.AddressValidator;
 import validation.UserValidator;
@@ -15,6 +13,8 @@ import infrastructure.memory.InMemoryRepo;
 import business.UserService;
 import business.FriendshipService;
 import business.SuperService;
+import utils.ConsoleColors;
+import utils.Constants;
 import presentation.UI;
 import test.ApplicationTester;
 

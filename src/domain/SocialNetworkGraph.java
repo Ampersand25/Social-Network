@@ -16,6 +16,22 @@ public class SocialNetworkGraph {
     IRepository<Long, User> userRepo;
 
     /**
+     * Metoda privata de tip operand (rezultat) care verifica daca un utilizator (obiect de clasa User) cu identificatorul unic userId (dat ca si parametru de intrare pentru metoda) exista in reteaua de socializare<br>
+     * Metoda intoarce/returneaza o valoare booleana (valoare logica de adevar, adica adevarat (true) sau fals (false))
+     * @param userId obiect de clasa Long care reprezinta identificatorul utilizatorului a carui existenta in retea dorim sa o testam (cu alte cuvinte vrem sa verificam daca in reteaua de socializare exista un utilizator cu id-ul userId)
+     * @return true daca utilizatorul cu id-ul egal cu parametrul formal/simbolic userId exista in reteaua de socializare<br>
+     *         false daca utilizatorul cu id-ul egal cu parametrul formal/simbolic userId nu exista in reteaua de socializare
+     */
+    private boolean userExists(Long userId) {
+        try {
+            userRepo.search(userId);
+            return true;
+        } catch(RepoException ex) {
+            return false;
+        }
+    }
+
+    /**
      * Metoda privata de tipul Long care returneaza/intoarce cel mai mare id al unui user/utilizator dintr-o lista de utilizatori (obiecte de clasa User) data ca si parametru de intrare pentru metoda
      * @param users obiect iterabil (lista) de obiecte de clasa User (utilizatori valizi din reteaua de socializare)
      * @return valoare numerica de tip Long reprenzentand id-ul maxim al unui utilizator din lista furnizata metodei in momentul apelului
@@ -98,13 +114,10 @@ public class SocialNetworkGraph {
         initVisitedNodes();
 
         for(int i = 0; i < size; ++i) {
-            try {
-                userRepo.search((long)i);
-                if(!visitedNodes[i]) {
-                    ++numberOfConnectedComponents;
-                    dfsVisit(i);
-                }
-            } catch(RepoException ignored) {}
+            if(userExists((long)i) && !visitedNodes[i]) {
+                ++numberOfConnectedComponents;
+                dfsVisit(i);
+            }
         }
 
         return numberOfConnectedComponents;
@@ -173,12 +186,9 @@ public class SocialNetworkGraph {
         initVisitedNodes();
 
         for(int i = 0; i < size; ++i) {
-            try {
-                userRepo.search((long)i);
-                if(!visitedNodes[i]) {
-                    communities.add(bfsVisit(i));
-                }
-            } catch(RepoException ignored) {}
+            if(userExists((long)i) && !visitedNodes[i]) {
+                communities.add(bfsVisit(i));
+            }
         }
 
         return communities;
