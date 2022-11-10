@@ -85,6 +85,13 @@ public class SuperService {
         return userService.search(userId);
     }
 
+    /**
+     * Metoda publica de tip operand/rezultat (returneaza/intoarce o valoare prin numele functiei) care cauta utilizatorii (obiectele de clasa User) din reteaua de socializare care contin sirul de caractere (stringul) name (dat ca si parametru de intrare metodei/functiei) in numele lor (numele sau prenumele utilizatorului contine stringul name)
+     * @param name obiect de clasa String ce reprezinta numele dupa care se filtreaza utilizatorii din retea
+     * @return obiect de clasa List cu elemente de tipul User (utilizatori existenti in reteaua de socializare) care reprezinta o lista cu toti userii/utilizatorii care contin parametrul formal/simbolic name in numele lor complet (adica fie in nume fie in prenume)
+     * @throws RepoException daca nu exista utilizatori in retea
+     * @throws ServiceException daca parametrul name este null sau lungimea sa este egala cu 0 (name este sirul de caractere vid)
+     */
     public List<User> searchUserAfterName(String name) throws RepoException, ServiceException {
         return userService.searchUserAfterName(name);
     }
