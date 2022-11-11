@@ -251,7 +251,7 @@ public class UserService {
 
         Iterable<User> users = userRepo.getAll();
         users.forEach(user -> {
-            if(user.getFirstName().contains(name) || user.getLastName().contains(name)) {
+            if(user.getFirstName().toLowerCase().contains(name.toLowerCase()) || user.getLastName().toLowerCase().contains(name.toLowerCase())) {
                 searchedUsers.add(user);
             }
         });
