@@ -146,7 +146,8 @@ public class UserService {
     }
 
     /**
-     * Metoda publica de tip operand/rezultat care sterge/elimina un utilizator (obiect de clasa User) din reteaua de socializare
+     * Metoda publica de tip operand/rezultat care sterge/elimina un utilizator (obiect de clasa User) din reteaua de socializare<br>
+     * Metoda se asigura ca toate prieteniile ce contin utilizatorul cu id-ul userId sunt sterse/eliminate din retea
      * @param userId identificatorul unic al utilizatorului pe care dorim sa il stergem/eliminam din retea
      * @return obiect de clasa User ce reprezinta utilizatorul cu id-ul userId pe care l-am sters din retea (intoarce utilizatorul sters in cazul in care stergerea s-a realizat cu succes)
      * @throws RepoException daca nu exista niciun utilizator cu id-ul userId in retea
@@ -172,7 +173,8 @@ public class UserService {
     }
 
     /**
-     * Metoda publica de tip operand/rezultat care modifica/actualizeaza un utilizator (obiect de clasa User) din reteaua de socializare
+     * Metoda publica de tip operand/rezultat care modifica/actualizeaza un utilizator (obiect de clasa User) din reteaua de socializare<br>
+     * Metoda se asigura ca toate relatiile de prietenie ce contin utilizatorul (obiect de clasa User) cu identificatorul unic egal cu parametrul de intrare userId vor fi actualizate
      * @param userId obiect de clasa Long (valoare numerica intreaga cu semn) ce reprezinta identificatorul unic al utilizatorului pe care dorim sa il modificam
      * @param firstName obiect de clasa String (sir de caractere) ce reprezinta prenumele utilizatorului pe care dorim sa il modificam
      * @param lastName obiect de clasa String (sir de caractere) ce reprezinta numele de familie al utilizatorului pe care dorim sa il modificam

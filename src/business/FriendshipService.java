@@ -265,7 +265,8 @@ public class FriendshipService {
     }
 
     /**
-     * Metoda publica de tip int (integer = intreg) care returneaza numarul de comunitati din reteaua de socializare (adica numarul de componente conexe din grafului retelei)
+     * Metoda publica de tip int (integer = intreg) care returneaza numarul de comunitati din reteaua de socializare (adica numarul de componente conexe din grafului retelei)<br>
+     * Se considera ca si comunitate (componenta conexa) si un singur utilizator (un user fara prieteni), acesta va reprezenta un nod/varf izolot in graful retelei
      * @return valoare numerica intreaga cu semn (signed) pe 4 bytes/octeti (32 de biti) reprezentand numarul de comunitati din retea
      */
     public int numberOfCommunities() {
@@ -288,7 +289,8 @@ public class FriendshipService {
     }
 
     /**
-     * Metoda publica de tip operand (rezultat) care returneaza/intoarce o lista cu toate comunitatile din reteaua de socializare (o comunitate reprezinta o componenta conexa din graful retelei)
+     * Metoda publica de tip operand (rezultat) care returneaza/intoarce o lista cu toate comunitatile din reteaua de socializare (o comunitate reprezinta o componenta conexa din graful retelei)<br>
+     * Se considera ca si comunitate (componenta conexa) si un singur utilizator (un user fara prieteni), acesta va reprezenta un nod/varf izolot in graful retelei
      * @return lista de elemente de tipul lista cu elemente numere intregi de tip long (obiecte de clasa Long) ce reprezinta lista tuturor comunitatilor din reteaua de socializare
      * @throws RepoException daca nu exista utilizatori (obiecte de clasa User) in reteaua de socializare
      */

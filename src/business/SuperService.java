@@ -44,7 +44,8 @@ public class SuperService {
     }
 
     /**
-     * Metoda publica de tip operand/rezultat care sterge/elimina un utilizator (obiect de clasa User) din reteaua de socializare
+     * Metoda publica de tip operand/rezultat care sterge/elimina un utilizator (obiect de clasa User) din reteaua de socializare<br>
+     * Metoda se asigura ca toate prieteniile ce contin utilizatorul cu id-ul userId sunt sterse/eliminate din retea
      * @param userId identificatorul unic al utilizatorului pe care dorim sa il stergem/eliminam din retea
      * @return obiect de clasa User ce reprezinta utilizatorul cu id-ul userId pe care l-am sters din retea (intoarce utilizatorul sters in cazul in care stergerea s-a realizat cu succes)
      * @throws RepoException daca nu exista niciun utilizator cu id-ul userId in retea
@@ -56,7 +57,8 @@ public class SuperService {
     }
 
     /**
-     * Metoda publica de tip operand/rezultat care modifica/actualizeaza un utilizator (obiect de clasa User) din reteaua de socializare
+     * Metoda publica de tip operand/rezultat care modifica/actualizeaza un utilizator (obiect de clasa User) din reteaua de socializare<br>
+     * Metoda se asigura ca toate relatiile de prietenie ce contin utilizatorul (obiect de clasa User) cu identificatorul unic egal cu parametrul de intrare userId vor fi actualizate
      * @param userId obiect de clasa Long (valoare numerica intreaga cu semn) ce reprezinta identificatorul unic al utilizatorului pe care dorim sa il modificam
      * @param firstName obiect de clasa String (sir de caractere) ce reprezinta prenumele utilizatorului pe care dorim sa il modificam
      * @param lastName obiect de clasa String (sir de caractere) ce reprezinta numele de familie al utilizatorului pe care dorim sa il modificam
@@ -210,7 +212,8 @@ public class SuperService {
     }
 
     /**
-     * Metoda publica de tip int (integer = intreg) care returneaza numarul de comunitati din reteaua de socializare (adica numarul de componente conexe din grafului retelei)
+     * Metoda publica de tip int (integer = intreg) care returneaza numarul de comunitati din reteaua de socializare (adica numarul de componente conexe din grafului retelei)<br>
+     * Se considera ca si comunitate (componenta conexa) si un singur utilizator (un user fara prieteni), acesta va reprezenta un nod/varf izolot in graful retelei
      * @return valoare numerica intreaga cu semn (signed) pe 4 bytes/octeti (32 de biti) reprezentand numarul de comunitati din retea
      */
     public int numberOfCommunities() {
@@ -218,7 +221,8 @@ public class SuperService {
     }
 
     /**
-     * Metoda publica de tip operand (rezultat) care returneaza/intoarce o lista cu toate comunitatile din reteaua de socializare (o comunitate reprezinta o componenta conexa din graful retelei)
+     * Metoda publica de tip operand (rezultat) care returneaza/intoarce o lista cu toate comunitatile din reteaua de socializare (o comunitate reprezinta o componenta conexa din graful retelei)<br>
+     * Se considera ca si comunitate (componenta conexa) si un singur utilizator (un user fara prieteni), acesta va reprezenta un nod/varf izolot in graful retelei
      * @return lista de elemente de tipul lista cu elemente numere intregi de tip long (obiecte de clasa Long) ce reprezinta lista tuturor comunitatilor din reteaua de socializare
      * @throws RepoException daca nu exista utilizatori (obiecte de clasa User) in reteaua de socializare
      */
