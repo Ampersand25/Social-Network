@@ -98,7 +98,7 @@ public class UserDbRepository implements IRepository<Long, User> {
             throw new IllegalArgumentException("[!]Id must not be null!\n");
         }
         else if(userID < 0L) {
-            throw new IllegalArgumentException("[!]Id must be a non-negative number!\n");
+            throw new IllegalArgumentException("[!]Id must be a non-negative integer!\n");
         }
 
         if(len() == 0) {
@@ -110,7 +110,7 @@ public class UserDbRepository implements IRepository<Long, User> {
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
             statement.setLong(1, userID);
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
+            if(resultSet.next()) {
                 String firstName = resultSet.getString("first_name");
                 String lastName = resultSet.getString("last_name");
                 LocalDate birthday = resultSet.getDate("birthday").toLocalDate();
