@@ -2,6 +2,8 @@ import domain.Address;
 import domain.User;
 import domain.Friendship;
 import exception.RepoException;
+import infrastructure.db.FriendshipDbRepository;
+import infrastructure.db.UserDbRepository;
 import infrastructure.file.UserFileRepo;
 import infrastructure.file.FriendshipFileRepo;
 import validation.IValidator;
@@ -59,8 +61,8 @@ public class Main {
                     }
                     break;
                 case "3":
-                    System.out.print(ConsoleColors.PURPLE + "[x]Option currently unavailable!" + ConsoleColors.RESET);
-                    keepRunning = true;
+                    userRepo = new UserDbRepository(Constants.DATABASE_URL, Constants.DATABASE_USER, Constants.DATABASE_PASSWORD);
+                    friendshipRepo = new FriendshipDbRepository(Constants.DATABASE_URL, Constants.DATABASE_USER, Constants.DATABASE_PASSWORD, userRepo);
                     break;
                 default:
                     System.out.print(ConsoleColors.RED + "[!]Invalid option!" + ConsoleColors.RESET);
