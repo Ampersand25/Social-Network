@@ -2,16 +2,16 @@ import domain.Address;
 import domain.User;
 import domain.Friendship;
 import exception.RepoException;
-import infrastructure.db.FriendshipDbRepository;
-import infrastructure.db.UserDbRepository;
-import infrastructure.file.UserFileRepo;
-import infrastructure.file.FriendshipFileRepo;
 import validation.IValidator;
 import validation.AddressValidator;
 import validation.UserValidator;
 import validation.FriendshipValidator;
 import infrastructure.IRepository;
 import infrastructure.memory.InMemoryRepo;
+import infrastructure.file.UserFileRepo;
+import infrastructure.file.FriendshipFileRepo;
+import infrastructure.db.FriendshipDbRepository;
+import infrastructure.db.UserDbRepository;
 import business.UserService;
 import business.FriendshipService;
 import business.SuperService;
@@ -27,7 +27,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
         // TODO: update documentation (write specifications for the new methods/functions implemented)
-        // TODO: create database repositories for the entities
+        // TODO: fixed possible bugs that may appear when running the app using database repositories
         // TODO: create test functions
 
         ApplicationTester applicationTester = new ApplicationTester();
