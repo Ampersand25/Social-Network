@@ -13,4 +13,7 @@ public class Constants {
             + "[^-][A-Za-z0-9\\+-]+(\\.[A-Za-z0-9\\+-]+)*(\\.[A-Za-z]{2,})$";
     public static final String USER_TEXT_FILE_PATH = "./src/data/users.csv";
     public static final String FRIENDSHIP_TEXT_FILE_PATH = "./src/data/friendships.csv";
+    public static final String DATABASE_URL = "jdbc:postgresql://localhost:5432/social_network";
+    public static final String DATABASE_USER = "postgres";
+    public static final String DATABASE_PASSWORD = "postgres";
 }
