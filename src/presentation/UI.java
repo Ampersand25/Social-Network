@@ -77,7 +77,7 @@ public class UI {
 
             superService.addUser(firstName, lastName, birthday, email, homeAddress, country, county, city);
             printSuccessMessage("[+]User added with success!");
-        } catch (ValidationException | RepoException | IllegalArgumentException ex) {
+        } catch(ValidationException | RepoException | IllegalArgumentException ex) {
             printException(ex.getMessage());
         } catch(DateTimeParseException ex) {
             printException("[!]Invalid date (the format of the date must be \"yyyy-MM-dd\")!\n");

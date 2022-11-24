@@ -6,7 +6,6 @@ import exception.RepoException;
 import infrastructure.IRepository;
 
 import java.sql.*;
-import java.time.ZoneId;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.HashSet;
@@ -47,8 +46,13 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
             statement.setLong(3, friendship.getSecondFriend().getId());
             statement.setDate(4, java.sql.Date.valueOf(friendship.getFriendsFrom().toLocalDate()));
             statement.executeUpdate();
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException ex) {
+            if(ex.getMessage().contains("ERROR: duplicate key value violates unique constraint \"uq_friendships\"\n")) {
+                throw new RepoException("[!]Friendship already exists!\n");
+            }
+            else {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -60,8 +64,8 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
             statement.setLong(1, friendshipID);
             statement.executeUpdate();
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException ex) {
+            ex.printStackTrace();
         }
         return deletedFriendships;
     }
@@ -81,8 +85,13 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
             statement.setDate(3, java.sql.Date.valueOf(friendship.getFriendsFrom().toLocalDate()));
             statement.setLong(4, friendship.getId());
             statement.executeUpdate();
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException ex) {
+            if(ex.getMessage().contains("ERROR: duplicate key value violates unique constraint \"uq_friendships\"\n")) {
+                throw new RepoException("[!]Friendship already exists!\n");
+            }
+            else {
+                ex.printStackTrace();
+            }
         }
         return modifiedFriendship;
     }
@@ -108,7 +117,7 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
             if(resultSet.next()) {
                 Long firstFriendID = resultSet.getLong("first_friend_id");
                 Long secondFriendID = resultSet.getLong("second_friend_id");
-                LocalDateTime friendsFrom = resultSet.getDate("friends_from").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                LocalDateTime friendsFrom = new Timestamp(resultSet.getDate("friends_from").getTime()).toLocalDateTime();
 
                 Friendship searchedFriendships = new Friendship(userRepo.search(firstFriendID), userRepo.search(secondFriendID), friendsFrom);
                 searchedFriendships.setId(friendshipID);
@@ -118,23 +127,23 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
             else {
                 throw new RepoException("[!]There is no friendship with the given id in the social network!\n");
             }
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException ex) {
+            ex.printStackTrace();
         }
         return null;
     }
 
     @Override
     public int len() {
-        String sqlCommand = "SELECT COUNT(*) FROM users";
+        String sqlCommand = "SELECT COUNT(*) FROM friendships";
         try(Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()) {
                 return resultSet.getInt(1);
             }
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException ex) {
+            ex.printStackTrace();
         }
         return 0;
     }
@@ -154,14 +163,14 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
                 Long friendshipID = resultSet.getLong("id");
                 Long firstFriendID = resultSet.getLong("first_friend_id");
                 Long secondFriendID = resultSet.getLong("second_friend_id");
-                LocalDateTime friendsFrom = resultSet.getDate("friends_from").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                LocalDateTime friendsFrom = new Timestamp(resultSet.getDate("friends_from").getTime()).toLocalDateTime();
 
                 Friendship friendship = new Friendship(userRepo.search(firstFriendID), userRepo.search(secondFriendID), friendsFrom);
                 friendship.setId(friendshipID);
                 friendships.add(friendship);
             }
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException ex) {
+            ex.printStackTrace();
         }
         return friendships;
     }

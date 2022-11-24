@@ -49,8 +49,13 @@ public class UserDbRepository implements IRepository<Long, User> {
             statement.setString(8, user.getAddress().getCounty());
             statement.setString(9, user.getAddress().getCity());
             statement.executeUpdate();
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException ex) {
+            if(ex.getMessage().contains("ERROR: duplicate key value violates unique constraint \"uq_users\"\n")) {
+                throw new RepoException("[!]There is already an user in the social network with the given email address!\n");
+            }
+            else {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -62,8 +67,8 @@ public class UserDbRepository implements IRepository<Long, User> {
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
             statement.setLong(1, userID);
             statement.executeUpdate();
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException ex) {
+            ex.printStackTrace();
         }
         return deletedUser;
     }
@@ -86,8 +91,8 @@ public class UserDbRepository implements IRepository<Long, User> {
             statement.setString(6, user.getAddress().getCity());
             statement.setLong(7, user.getId());
             statement.executeUpdate();
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException ex) {
+            ex.printStackTrace();
         }
         return modifiedUser;
     }
@@ -130,8 +135,8 @@ public class UserDbRepository implements IRepository<Long, User> {
             else {
                 throw new RepoException("[!]There is no user with the given id in the social network!\n");
             }
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException ex) {
+            ex.printStackTrace();
         }
         return null;
     }
@@ -145,8 +150,8 @@ public class UserDbRepository implements IRepository<Long, User> {
             if(resultSet.next()) {
                 return resultSet.getInt(1);
             }
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException ex) {
+            ex.printStackTrace();
         }
         return 0;
     }
@@ -179,8 +184,8 @@ public class UserDbRepository implements IRepository<Long, User> {
                 user.setId(userID);
                 users.add(user);
             }
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException ex) {
+            ex.printStackTrace();
         }
         return users;
     }
