@@ -44,7 +44,7 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
             statement.setLong(1, friendship.getId());
             statement.setLong(2, friendship.getFirstFriend().getId());
             statement.setLong(3, friendship.getSecondFriend().getId());
-            statement.setDate(4, java.sql.Date.valueOf(friendship.getFriendsFrom().toLocalDate()));
+            statement.setTimestamp(4, Timestamp.valueOf(friendship.getFriendsFrom()));
             statement.executeUpdate();
         } catch(SQLException ex) {
             if(ex.getMessage().contains("ERROR: duplicate key value violates unique constraint \"uq_friendships\"\n")) {
@@ -82,7 +82,7 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
             statement.setLong(1, friendship.getFirstFriend().getId());
             statement.setLong(2, friendship.getSecondFriend().getId());
-            statement.setDate(3, java.sql.Date.valueOf(friendship.getFriendsFrom().toLocalDate()));
+            statement.setTimestamp(3, Timestamp.valueOf(friendship.getFriendsFrom()));
             statement.setLong(4, friendship.getId());
             statement.executeUpdate();
         } catch(SQLException ex) {
@@ -117,7 +117,7 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
             if(resultSet.next()) {
                 Long firstFriendID = resultSet.getLong("first_friend_id");
                 Long secondFriendID = resultSet.getLong("second_friend_id");
-                LocalDateTime friendsFrom = new Timestamp(resultSet.getDate("friends_from").getTime()).toLocalDateTime();
+                LocalDateTime friendsFrom = resultSet.getTimestamp("friends_from").toLocalDateTime();
 
                 Friendship searchedFriendships = new Friendship(userRepo.search(firstFriendID), userRepo.search(secondFriendID), friendsFrom);
                 searchedFriendships.setId(friendshipID);
@@ -163,7 +163,7 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
                 Long friendshipID = resultSet.getLong("id");
                 Long firstFriendID = resultSet.getLong("first_friend_id");
                 Long secondFriendID = resultSet.getLong("second_friend_id");
-                LocalDateTime friendsFrom = new Timestamp(resultSet.getDate("friends_from").getTime()).toLocalDateTime();
+                LocalDateTime friendsFrom = resultSet.getTimestamp("friends_from").toLocalDateTime();
 
                 Friendship friendship = new Friendship(userRepo.search(firstFriendID), userRepo.search(secondFriendID), friendsFrom);
                 friendship.setId(friendshipID);
