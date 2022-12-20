@@ -9,6 +9,7 @@ public class Friendship extends Entity<Long> {
     private User firstFriend;
     private User secondFriend;
     private LocalDateTime friendsFrom;
+    private Friendship_Status status;
 
     /**
      * Constructor public al unui obiect de clasa Friendship care primeste doi parametri de intrare: firstFriend de tipul User (utilizator din reteaua de socializare) si secondFriend de tipul User (utilizator din reteaua de socializare)
@@ -19,6 +20,7 @@ public class Friendship extends Entity<Long> {
         this.firstFriend = firstFriend;
         this.secondFriend = secondFriend;
         this.friendsFrom = LocalDateTime.now();
+        this.status = Friendship_Status.PENDING;
     }
 
     /**
@@ -31,6 +33,14 @@ public class Friendship extends Entity<Long> {
         this.firstFriend = firstFriend;
         this.secondFriend = secondFriend;
         this.friendsFrom = friendsFrom;
+        this.status = Friendship_Status.PENDING;
+    }
+
+    public Friendship(User firstFriend, User secondFriend, LocalDateTime friendsFrom, Friendship_Status status) {
+        this.firstFriend = firstFriend;
+        this.secondFriend = secondFriend;
+        this.friendsFrom = friendsFrom;
+        this.status = status;
     }
 
     /**
@@ -45,6 +55,15 @@ public class Friendship extends Entity<Long> {
         this.firstFriend = firstFriend;
         this.secondFriend = secondFriend;
         this.friendsFrom = friendsFrom;
+        this.status = Friendship_Status.PENDING;
+    }
+
+    public Friendship(Long id, User firstFriend, User secondFriend, LocalDateTime friendsFrom, Friendship_Status status) {
+        super(id);
+        this.firstFriend = firstFriend;
+        this.secondFriend = secondFriend;
+        this.friendsFrom = friendsFrom;
+        this.status = status;
     }
 
     /**
@@ -87,6 +106,14 @@ public class Friendship extends Entity<Long> {
         return friendsFrom;
     }
 
+    public Friendship_Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Friendship_Status newStatus) {
+        this.status = newStatus;
+    }
+
     /**
      * Metoda publica de tip setter care modifica/actualizeaza data si ora la care a fost creata relatia de prietenie (obiect de clasa Friendship)
      * @param friendsFrom obiect de clasa LocalDateTime reprenzentand noua data (zi, luna, an) si ora (ora, minut, secunda) la care prietenia a fost intemeiata intre cei doi prieteni reprezentati de atributele firstFriend si secondFriend
@@ -101,7 +128,7 @@ public class Friendship extends Entity<Long> {
      */
     @Override
     public String toString() {
-        return "id: " + super.getId() + "\nfirst friend: " + getFirstFriend() + "\nsecond friend: " + getSecondFriend() + "\ndate (year, month, day) and time (hour, minute, second) when the friendship was created: " + getFriendsFrom().format(Constants.DATE_TIME_FORMATTER);
+        return "id: " + super.getId() + "\nfirst friend: " + getFirstFriend() + "\nsecond friend: " + getSecondFriend() + "\ndate (year, month, day) and time (hour, minute, second) when the friendship was created: " + getFriendsFrom().format(Constants.DATE_TIME_FORMATTER) + "\nstatus: " + getStatus();
     }
 
     /**

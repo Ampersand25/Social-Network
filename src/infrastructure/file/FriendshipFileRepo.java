@@ -1,9 +1,11 @@
 package infrastructure.file;
 
 import domain.User;
+import domain.Friendship_Status;
 import domain.Friendship;
 import exception.RepoException;
 import infrastructure.IRepository;
+import utils.FriendshipStatusConverter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -48,9 +50,17 @@ public class FriendshipFileRepo extends AbstractFileRepo<Long, Friendship> {
         Long firstFriendId = Long.parseLong(attributes.get(1));
         Long secondFriendId = Long.parseLong(attributes.get(2));
         LocalDateTime friendsFrom = LocalDateTime.parse(attributes.get(3), Constants.DATE_TIME_FORMATTER);
+        Friendship_Status status;
+        try {
+            status = FriendshipStatusConverter.convertStringToStatus(attributes.get(4));
+        } catch(Exception ex) {
+            System.err.println("[!]Error at reading friendship status from file (invalid status)!");
+            ex.printStackTrace();
+            return null;
+        }
 
         try {
-            return new Friendship(id, userRepo.search(firstFriendId), userRepo.search(secondFriendId), friendsFrom);
+            return new Friendship(id, userRepo.search(firstFriendId), userRepo.search(secondFriendId), friendsFrom, status);
         } catch(RepoException ex) {
             System.err.println("[!]Error at searching friends in user repository (there is no user with " + firstFriendId + " id or there is no user with " + secondFriendId + " id)!");
             ex.printStackTrace();
@@ -60,6 +70,6 @@ public class FriendshipFileRepo extends AbstractFileRepo<Long, Friendship> {
 
     @Override
     protected String convertEntityToString(@NotNull Friendship friendship) {
-        return friendship.getId().toString() + ";" + friendship.getFirstFriend().getId().toString() + ";" + friendship.getSecondFriend().getId().toString() + ";" + friendship.getFriendsFrom().format(Constants.DATE_TIME_FORMATTER);
+        return friendship.getId().toString() + ";" + friendship.getFirstFriend().getId().toString() + ";" + friendship.getSecondFriend().getId().toString() + ";" + friendship.getFriendsFrom().format(Constants.DATE_TIME_FORMATTER) + ";" + FriendshipStatusConverter.convertStatusToString(friendship.getStatus());
     }
 }

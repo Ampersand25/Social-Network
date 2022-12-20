@@ -44,18 +44,18 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         boolean keepRunning = true;
-        while(keepRunning) {
+        while (keepRunning) {
             keepRunning = false;
             System.out.print("\n>>>");
             String cmd = scanner.nextLine();
-            switch(cmd) {
+            switch (cmd) {
                 case "1":
                     break;
                 case "2":
                     try {
                         userRepo = new UserFileRepo(Constants.USER_TEXT_FILE_PATH);
                         friendshipRepo = new FriendshipFileRepo(Constants.FRIENDSHIP_TEXT_FILE_PATH, userRepo);
-                    } catch(RepoException | IOException ex) {
+                    } catch (RepoException | IOException ex) {
                         System.out.println("Current directory/folder is: " + new File(".").getAbsoluteFile());
                         ex.printStackTrace();
                         System.exit(1);

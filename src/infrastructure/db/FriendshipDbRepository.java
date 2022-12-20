@@ -1,9 +1,11 @@
 package infrastructure.db;
 
+import domain.Friendship_Status;
 import domain.User;
 import domain.Friendship;
 import exception.RepoException;
 import infrastructure.IRepository;
+import utils.FriendshipStatusConverter;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -38,13 +40,14 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
             throw new RepoException("[!]Friendship already exists in the social network (there is a friendship with the given id)!\n");
         }
 
-        String sqlCommand = "INSERT INTO friendships (id, first_friend_id, second_friend_id, friends_from) VALUES (?, ?, ?, ?)";
+        String sqlCommand = "INSERT INTO friendships (id, first_friend_id, second_friend_id, friends_from, friendship_status) VALUES (?, ?, ?, ?, ?)";
         try(Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
             statement.setLong(1, friendship.getId());
             statement.setLong(2, friendship.getFirstFriend().getId());
             statement.setLong(3, friendship.getSecondFriend().getId());
             statement.setTimestamp(4, Timestamp.valueOf(friendship.getFriendsFrom()));
+            statement.setString(5, FriendshipStatusConverter.convertStatusToString(friendship.getStatus()));
             statement.executeUpdate();
         } catch(SQLException ex) {
             if(ex.getMessage().contains("ERROR: duplicate key value violates unique constraint \"uq_friendships\"\n")) {
@@ -77,13 +80,14 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
         }
 
         Friendship modifiedFriendship = search(friendship.getId());
-        String sqlCommand = "UPDATE friendships SET first_friend_id = ?, second_friend_id = ?, friends_from = ? WHERE id = ?";
+        String sqlCommand = "UPDATE friendships SET first_friend_id = ?, second_friend_id = ?, friends_from = ?, friendship_status = ? WHERE id = ?";
         try(Connection connection = DriverManager.getConnection(url, username, password)) {
             PreparedStatement statement = connection.prepareStatement(sqlCommand);
             statement.setLong(1, friendship.getFirstFriend().getId());
             statement.setLong(2, friendship.getSecondFriend().getId());
             statement.setTimestamp(3, Timestamp.valueOf(friendship.getFriendsFrom()));
-            statement.setLong(4, friendship.getId());
+            statement.setString(4, FriendshipStatusConverter.convertStatusToString(friendship.getStatus()));
+            statement.setLong(5, friendship.getId());
             statement.executeUpdate();
         } catch(SQLException ex) {
             if(ex.getMessage().contains("ERROR: duplicate key value violates unique constraint \"uq_friendships\"\n")) {
@@ -118,8 +122,16 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
                 Long firstFriendID = resultSet.getLong("first_friend_id");
                 Long secondFriendID = resultSet.getLong("second_friend_id");
                 LocalDateTime friendsFrom = resultSet.getTimestamp("friends_from").toLocalDateTime();
+                Friendship_Status status;
+                try {
+                    status = FriendshipStatusConverter.convertStringToStatus(resultSet.getString("friendship_status"));
+                } catch(Exception ex) {
+                    System.err.println("[!]Error at reading friendship status from database (invalid status)!");
+                    ex.printStackTrace();
+                    return null;
+                }
 
-                Friendship searchedFriendships = new Friendship(userRepo.search(firstFriendID), userRepo.search(secondFriendID), friendsFrom);
+                Friendship searchedFriendships = new Friendship(userRepo.search(firstFriendID), userRepo.search(secondFriendID), friendsFrom, status);
                 searchedFriendships.setId(friendshipID);
 
                 return searchedFriendships;
@@ -164,8 +176,16 @@ public class FriendshipDbRepository implements IRepository<Long, Friendship> {
                 Long firstFriendID = resultSet.getLong("first_friend_id");
                 Long secondFriendID = resultSet.getLong("second_friend_id");
                 LocalDateTime friendsFrom = resultSet.getTimestamp("friends_from").toLocalDateTime();
+                Friendship_Status status;
+                try {
+                    status = FriendshipStatusConverter.convertStringToStatus(resultSet.getString("friendship_status"));
+                } catch(Exception ex) {
+                    System.err.println("[!]Error at reading friendship status from database (invalid status)!");
+                    ex.printStackTrace();
+                    return null;
+                }
 
-                Friendship friendship = new Friendship(userRepo.search(firstFriendID), userRepo.search(secondFriendID), friendsFrom);
+                Friendship friendship = new Friendship(userRepo.search(firstFriendID), userRepo.search(secondFriendID), friendsFrom, status);
                 friendship.setId(friendshipID);
                 friendships.add(friendship);
             }
