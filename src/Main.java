@@ -30,6 +30,8 @@ public class Main {
         // TODO: generate JavaDoc after documentation is done
         // TODO: create test functions
         // TODO: refactor code
+        // TODO: start creating GUI
+        // TODO: add username and password fields for User entity
 
         ApplicationTester applicationTester = new ApplicationTester();
         applicationTester.runAllTests();
