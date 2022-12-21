@@ -29,11 +29,14 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
         // TODO: update documentation (write specifications for the new methods/functions implemented)
+        // TODO: update documentation (rewrite specifications for modified methods/functions)
         // TODO: generate JavaDoc after documentation is done
         // TODO: create test functions
         // TODO: refactor code
         // TODO: start creating GUI
-        // TODO: add username and password fields for User entity
+        // TODO: create login window
+        // TODO: create register window
+        // TODO: create main window
 
         ApplicationTester applicationTester = new ApplicationTester();
         applicationTester.runAllTests();
