@@ -39,8 +39,8 @@ public class SuperService {
      * @throws RepoException daca utilizatorul exista deja in reteaua de socializare (exista un obiect de clasa User care are acelasi id)
      * @throws IllegalArgumentException daca identificatorul unic al utilizatorului nu este valid (este null sau este mai mic strict decat 0)
      */
-    public void addUser(String firstName, String lastName, LocalDate birthday, String email, String homeAddress, String country, String county, String city) throws ValidationException, RepoException, IllegalArgumentException {
-        userService.add(firstName, lastName, birthday, email, homeAddress, country, county, city);
+    public void addUser(String firstName, String lastName, LocalDate birthday, String email, String homeAddress, String country, String county, String city, String username, String password) throws ValidationException, RepoException, IllegalArgumentException {
+        userService.add(firstName, lastName, birthday, email, homeAddress, country, county, city, username, password);
     }
 
     /**
@@ -71,8 +71,8 @@ public class SuperService {
      * @throws RepoException daca nu exista niciun utilizator in retea sau daca utilizatorul pe care dorim sa il modificam nu exista (nu exista niciun user cu id-ul userId)
      * @throws IllegalArgumentException daca id-ul userId este invalid (este null sau este o valoare numerica intreaga strict negativa)
      */
-    public User modifyUser(Long userId, String firstName, String lastName, String homeAddress, String country, String county, String city) throws ValidationException, RepoException, IllegalArgumentException {
-        return userService.modify(userId, firstName, lastName, homeAddress, country, county, city);
+    public User modifyUser(Long userId, String firstName, String lastName, String homeAddress, String country, String county, String city, String username, String password) throws ValidationException, RepoException, IllegalArgumentException {
+        return userService.modify(userId, firstName, lastName, homeAddress, country, county, city, username, password);
     }
 
     /**

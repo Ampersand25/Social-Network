@@ -1,10 +1,12 @@
 import domain.Address;
+import domain.Credential;
 import domain.User;
 import domain.Friendship;
 import exception.RepoException;
 import validation.IValidator;
-import validation.AddressValidator;
 import validation.UserValidator;
+import validation.AddressValidator;
+import validation.CredentialValidator;
 import validation.FriendshipValidator;
 import infrastructure.IRepository;
 import infrastructure.memory.InMemoryRepo;
@@ -75,7 +77,8 @@ public class Main {
         }
 
         IValidator<Address> addressValidator = new AddressValidator();
-        IValidator<User> userValidator = new UserValidator(addressValidator);
+        IValidator<Credential> credentialValidator = new CredentialValidator();
+        IValidator<User> userValidator = new UserValidator(addressValidator, credentialValidator);
         UserService userService = new UserService(userValidator, userRepo, friendshipRepo);
 
         IValidator<Friendship> friendshipValidator = new FriendshipValidator();

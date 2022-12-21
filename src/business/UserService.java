@@ -1,6 +1,7 @@
 package business;
 
 import domain.Address;
+import domain.Credential;
 import domain.Friendship;
 import domain.User;
 import exception.ValidationException;
@@ -130,9 +131,10 @@ public class UserService {
      * @throws RepoException daca utilizatorul exista deja in reteaua de socializare (exista un obiect de clasa User care are acelasi id)
      * @throws IllegalArgumentException daca identificatorul unic al utilizatorului nu este valid (este null sau este mai mic strict decat 0)
      */
-    public void add(String firstName, String lastName, LocalDate birthday, String email, String homeAddress, String country, String county, String city) throws ValidationException, RepoException, IllegalArgumentException {
+    public void add(String firstName, String lastName, LocalDate birthday, String email, String homeAddress, String country, String county, String city, String username, String password) throws ValidationException, RepoException, IllegalArgumentException {
         Address address = new Address(homeAddress, country, county, city);
-        User user = new User(firstName, lastName, birthday, email, address);
+        Credential credential = new Credential(username, password);
+        User user = new User(firstName, lastName, birthday, email, address, credential);
         user.setId(availableId++);
 
         try{
@@ -187,7 +189,7 @@ public class UserService {
      * @throws RepoException daca nu exista niciun utilizator in retea sau daca utilizatorul pe care dorim sa il modificam nu exista (nu exista niciun user cu id-ul userId)
      * @throws IllegalArgumentException daca id-ul userId este invalid (este null sau este o valoare numerica intreaga strict negativa)
      */
-    public User modify(Long userId, String firstName, String lastName, String homeAddress, String country, String county, String city) throws ValidationException, RepoException, IllegalArgumentException {
+    public User modify(Long userId, String firstName, String lastName, String homeAddress, String country, String county, String city, String username, String password) throws ValidationException, RepoException, IllegalArgumentException {
         LocalDate birthday = LocalDate.now();
         String email = "";
         List<User> friendList = new ArrayList<>();
@@ -199,7 +201,8 @@ public class UserService {
         } catch (ServiceException ignored) {}
 
         Address address = new Address(homeAddress, country, county, city);
-        User newUser = new User(userId, firstName, lastName, birthday, email, address);
+        Credential credential = new Credential(username, password);
+        User newUser = new User(userId, firstName, lastName, birthday, email, address, credential);
         newUser.setFriendList(friendList);
         validator.validate(newUser);
 

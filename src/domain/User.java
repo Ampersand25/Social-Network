@@ -12,6 +12,7 @@ public class User extends Entity<Long> {
     private final String email;
     private List<User> friendList;
     Address address;
+    Credential credential;
 
     /**
      * Constructor public al unui obiect de clasa User care primeste 4 parametrii de intrare (parametrii formali/simbolici)
@@ -21,13 +22,14 @@ public class User extends Entity<Long> {
      * @param email obiect de clasa String care reprezinta adresa de email a utilizatorului creat
      * @param address obiect de clasa Address care reprezinta domiciliul persoanei (adresa fizica)
      */
-    public User(String firstName, String lastName, LocalDate birthday, String email, Address address) {
+    public User(String firstName, String lastName, LocalDate birthday, String email, Address address, Credential credential) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
         this.email = email;
         friendList = new ArrayList<>();
         this.address = address;
+        this.credential = credential;
     }
 
     /**
@@ -39,7 +41,7 @@ public class User extends Entity<Long> {
      * @param email obiect de clasa String care reprezinta adresa de email a utilizatorului creat
      * @param address obiect de clasa Address care reprezinta domiciliul persoanei (adresa fizica)
      */
-    public User(Long id, String firstName, String lastName, LocalDate birthday, String email, Address address) {
+    public User(Long id, String firstName, String lastName, LocalDate birthday, String email, Address address, Credential credential) {
         super(id);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -47,6 +49,7 @@ public class User extends Entity<Long> {
         this.email = email;
         friendList = new ArrayList<>();
         this.address = address;
+        this.credential = credential;
     }
 
     /**
@@ -121,13 +124,21 @@ public class User extends Entity<Long> {
         this.address = address;
     }
 
+    public Credential getCredential() {
+        return credential;
+    }
+
+    public void setCredential(Credential credential) {
+        this.credential = credential;
+    }
+
     /**
      * Metoda publica de tip String care intoarce/returneaza varianta textuala a unui obiect de clasa User (cum sa fie afisata pe ecran (in consola/terminal) instanta clasei User care apeleaza metoda)
      * @return obiect de clasa String ce reprezinta forma textuala (forma scrisa) pe care o are un obiect de clasa User (un utilizator din reteaua de socializare)
      */
     @Override
     public String toString() {
-        return "id=" + super.getId() + ";first name=" + getFirstName() + ";last name=" + getLastName() + ";birthday=" + getBirthday() + ";email=" + getEmail() + ";" + getAddress().toString();
+        return "id=" + super.getId() + ";first name=" + getFirstName() + ";last name=" + getLastName() + ";birthday=" + getBirthday() + ";email=" + getEmail() + ";" + getAddress().toString() + ";" + getCredential().toString();
     }
 
     /**
@@ -153,6 +164,6 @@ public class User extends Entity<Long> {
         if(!(obj instanceof User that)) {
             return false;
         }
-        return Objects.equals(getId(), that.getId()) || Objects.equals(getEmail(), that.getEmail());
+        return Objects.equals(getId(), that.getId()) || Objects.equals(getEmail(), that.getEmail()) || Objects.equals(getCredential().getUsername(), that.getCredential().getUsername()) || Objects.equals(getCredential().getPassword(), that.getCredential().getPassword());
     }
 }

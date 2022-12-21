@@ -1,6 +1,7 @@
 package infrastructure.file;
 
 import domain.Address;
+import domain.Credential;
 import domain.User;
 import exception.RepoException;
 
@@ -32,11 +33,15 @@ public class UserFileRepo extends AbstractFileRepo<Long, User> {
         String city = attributes.get(8);
         Address address = new Address(homeAddress, country, county, city);
 
-        return new User(id, firstName, lastName, birthday, email, address);
+        String username = attributes.get(9);
+        String password = attributes.get(10);
+        Credential credential = new Credential(username, password);
+
+        return new User(id, firstName, lastName, birthday, email, address, credential);
     }
 
     @Override
     protected String convertEntityToString(@NotNull User user) {
-        return user.getId().toString() + ";" + user.getFirstName() + ";" + user.getLastName() + ";" + user.getBirthday().format(Constants.DATE_FORMATTER) + ";" + user.getEmail() + ";" + user.getAddress().getHomeAddress() + ";" + user.getAddress().getCountry() + ";" + user.getAddress().getCounty() + ";" + user.getAddress().getCity();
+        return user.getId().toString() + ";" + user.getFirstName() + ";" + user.getLastName() + ";" + user.getBirthday().format(Constants.DATE_FORMATTER) + ";" + user.getEmail() + ";" + user.getAddress().getHomeAddress() + ";" + user.getAddress().getCountry() + ";" + user.getAddress().getCounty() + ";" + user.getAddress().getCity() + ";" + user.getCredential().getUsername() + ";" + user.getCredential().getPassword();
     }
 }

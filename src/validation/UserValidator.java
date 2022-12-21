@@ -1,6 +1,7 @@
 package validation;
 
 import domain.Address;
+import domain.Credential;
 import domain.User;
 import exception.ValidationException;
 import utils.Constants;
@@ -11,10 +12,12 @@ import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 
 public class UserValidator implements IValidator<User> {
-    private final IValidator<Address> addressIValidator;
+    private final IValidator<Address> addressValidator;
+    private final IValidator<Credential> credentialValidator;
 
-    public UserValidator(IValidator<Address> addressIValidator) {
-        this.addressIValidator = addressIValidator;
+    public UserValidator(IValidator<Address> addressIValidator, IValidator<Credential> credentialIValidator) {
+        this.addressValidator = addressIValidator;
+        this.credentialValidator = credentialIValidator;
     }
 
     /**
@@ -152,7 +155,13 @@ public class UserValidator implements IValidator<User> {
         }
 
         try {
-            addressIValidator.validate(user.getAddress());
+            addressValidator.validate(user.getAddress());
+        } catch(ValidationException ex) {
+            err += ex.getMessage();
+        }
+
+        try {
+            credentialValidator.validate(user.getCredential());
         } catch(ValidationException ex) {
             err += ex.getMessage();
         }

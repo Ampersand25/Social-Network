@@ -75,7 +75,13 @@ public class UI {
             System.out.print("Introduce the city of the new user: ");
             String city = scanner.nextLine();
 
-            superService.addUser(firstName, lastName, birthday, email, homeAddress, country, county, city);
+            System.out.print("Introduce the username of the new user: ");
+            String username = scanner.nextLine();
+
+            System.out.print("Introduce the password of the new user: ");
+            String password = scanner.nextLine();
+
+            superService.addUser(firstName, lastName, birthday, email, homeAddress, country, county, city, username, password);
             printSuccessMessage("[+]User added with success!");
         } catch(ValidationException | RepoException | IllegalArgumentException ex) {
             printException(ex.getMessage());
@@ -121,7 +127,13 @@ public class UI {
             System.out.print("Introduce the new city of the user you want to modify: ");
             String city = scanner.nextLine();
 
-            User modifiedUser = superService.modifyUser(userId, firstName, lastName, homeAddress, country, county, city);
+            System.out.print("Introduce the new username of the user you want to modify: ");
+            String username = scanner.nextLine();
+
+            System.out.print("Introduce the new password of the user you want to modify: ");
+            String password = scanner.nextLine();
+
+            User modifiedUser = superService.modifyUser(userId, firstName, lastName, homeAddress, country, county, city, username, password);
             printSuccessMessage("[&]User modified with success!\nModified user: " + modifiedUser);
         } catch (ValidationException | RepoException ex) {
             printException(ex.getMessage());
@@ -221,16 +233,16 @@ public class UI {
 
     private void addUsersDebug() {
         try{
-            superService.addUser("Ben John"       , "O'Brien"     , LocalDate.of(1998, 10, 15), "ben_john98@ezybarber.com"     , "Strada Caderea Bastiliei 11"             , "Romania", "Timis"    , "Timisoara");
-            superService.addUser("William"        , "Day"         , LocalDate.of(1988, 12, 30), "will_day88@gmail.com"         , "Piata Presei Libere 3-5"                 , "Romania", "Dolj"     , "Craiova");
-            superService.addUser("Charles Richard", "Kelly"       , LocalDate.of(1996, 3 , 13), "charlie_kelly96@yahoo.com"    , "Strada Bihor"                            , "Romania", "Brasov"   , "Brasov");
-            superService.addUser("Donald"         , "Castaneda"   , LocalDate.of(1998, 7 , 4) , "donald_castaneda98@domain.com", "Strada Economu Cezarescu 42"             , "Romania", "Cluj"     , "Cluj-Napoca");
-            superService.addUser("Charles-Mike"   , "Lam"         , LocalDate.of(1986, 4 , 15), "charles_lam86@manghinsu.com"  , "Strada Miletin"                          , "Romania", "Bihor"    , "Oradea");
-            superService.addUser("Robert"         , "Beck"        , LocalDate.of(1990, 7 , 23), "bert_beck90@otpku.com"        , "Calea Crangasi 29"                       , "Romania", "Braila"   , "Braila");
-            superService.addUser("O'Mikel"        , "Rowe"        , LocalDate.of(1984, 3 , 20), "rowe84@thekangsua.com"        , "Bulevardul Timisoara 26"                 , "Romania", "Arges"    , "Pitesti");
-            superService.addUser("Mike-Abraham"   , "Dotson"      , LocalDate.of(1989, 9 , 5) , "mike_dotson89@bomukic.com"    , "Piata Romana 6"                          , "Romania", "Mures"    , "Targu Mures");
-            superService.addUser("Joseph Michael" , "Tucker-Doyle", LocalDate.of(2001, 1 , 22), "joseph_mike01@avmap.com"      , "Bulevardul General Gheorghe Magheru 2-4" , "Romania", "Maramures", "Baia Mare");
-            superService.addUser("Robert"         , "O'Gallagher" , LocalDate.of(1994, 12, 6) , "robertino94@gmailni.com"      , "Aleea Istru Nr. 5, Bl P4, Ap31, Sector 6", "Romania", "Botosani" , "Botosani");
+            superService.addUser("Ben John"       , "O'Brien"     , LocalDate.of(1998, 10, 15), "ben_john98@ezybarber.com"     , "Strada Caderea Bastiliei 11"             , "Romania", "Timis"    , "Timisoara"  , "clearwing"   , "ZuwX8xSKP9M!CKgF");
+            superService.addUser("William"        , "Day"         , LocalDate.of(1988, 12, 30), "will_day88@gmail.com"         , "Piata Presei Libere 3-5"                 , "Romania", "Dolj"     , "Craiova"    , "pomegranates", "xJQ^WsdcH%yf%TzG");
+            superService.addUser("Charles Richard", "Kelly"       , LocalDate.of(1996, 3 , 13), "charlie_kelly96@yahoo.com"    , "Strada Bihor"                            , "Romania", "Brasov"   , "Brasov"     , "rowboat"     , "ge*v@&W7Mh%z#FVa");
+            superService.addUser("Donald"         , "Castaneda"   , LocalDate.of(1998, 7 , 4) , "donald_castaneda98@domain.com", "Strada Economu Cezarescu 42"             , "Romania", "Cluj"     , "Cluj-Napoca", "sympathy"    , "@Db*u8esF@DL4nW(");
+            superService.addUser("Charles-Mike"   , "Lam"         , LocalDate.of(1986, 4 , 15), "charles_lam86@manghinsu.com"  , "Strada Miletin"                          , "Romania", "Bihor"    , "Oradea"     , "wrinkles"    , "m9yduP6vAng5#Sa&");
+            superService.addUser("Robert"         , "Beck"        , LocalDate.of(1990, 7 , 23), "bert_beck90@otpku.com"        , "Calea Crangasi 29"                       , "Romania", "Braila"   , "Braila"     , "timberhead"  , "XKU8@k5P%c+s*k(A");
+            superService.addUser("O'Mikel"        , "Rowe"        , LocalDate.of(1984, 3 , 20), "rowe84@thekangsua.com"        , "Bulevardul Timisoara 26"                 , "Romania", "Arges"    , "Pitesti"    , "nautical"    , "2+9VbKyNV5C%!bKT");
+            superService.addUser("Mike-Abraham"   , "Dotson"      , LocalDate.of(1989, 9 , 5) , "mike_dotson89@bomukic.com"    , "Piata Romana 6"                          , "Romania", "Mures"    , "Targu Mures", "refugee"     , "GHPdPCV+ckxmuhw6");
+            superService.addUser("Joseph Michael" , "Tucker-Doyle", LocalDate.of(2001, 1 , 22), "joseph_mike01@avmap.com"      , "Bulevardul General Gheorghe Magheru 2-4" , "Romania", "Maramures", "Baia Mare"  , "bint"        , "3JAhVj+^w#8e*ppJ");
+            superService.addUser("Robert"         , "O'Gallagher" , LocalDate.of(1994, 12, 6) , "robertino94@gmailni.com"      , "Aleea Istru Nr. 5, Bl P4, Ap31, Sector 6", "Romania", "Botosani" , "Botosani"   , "pester"      , "AU4kJDZSUP6z^rKV");
 
             printSuccessMessage("[+]All 10 users added with success!");
         } catch(ValidationException | RepoException | IllegalArgumentException ex) {
